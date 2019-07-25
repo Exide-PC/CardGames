@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardGames", "CardGames\CardGames.csproj", "{C1139270-0F4F-4809-878F-F807DE79B87F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardGames.Core", "CardGames.Core\CardGames.Core.csproj", "{5DB6D107-EAAB-4E72-BAC2-73FB41C25984}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,17 @@ Global
 		{C1139270-0F4F-4809-878F-F807DE79B87F}.Release|x64.Build.0 = Release|Any CPU
 		{C1139270-0F4F-4809-878F-F807DE79B87F}.Release|x86.ActiveCfg = Release|Any CPU
 		{C1139270-0F4F-4809-878F-F807DE79B87F}.Release|x86.Build.0 = Release|Any CPU
+		{5DB6D107-EAAB-4E72-BAC2-73FB41C25984}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DB6D107-EAAB-4E72-BAC2-73FB41C25984}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DB6D107-EAAB-4E72-BAC2-73FB41C25984}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5DB6D107-EAAB-4E72-BAC2-73FB41C25984}.Debug|x64.Build.0 = Debug|Any CPU
+		{5DB6D107-EAAB-4E72-BAC2-73FB41C25984}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5DB6D107-EAAB-4E72-BAC2-73FB41C25984}.Debug|x86.Build.0 = Debug|Any CPU
+		{5DB6D107-EAAB-4E72-BAC2-73FB41C25984}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DB6D107-EAAB-4E72-BAC2-73FB41C25984}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DB6D107-EAAB-4E72-BAC2-73FB41C25984}.Release|x64.ActiveCfg = Release|Any CPU
+		{5DB6D107-EAAB-4E72-BAC2-73FB41C25984}.Release|x64.Build.0 = Release|Any CPU
+		{5DB6D107-EAAB-4E72-BAC2-73FB41C25984}.Release|x86.ActiveCfg = Release|Any CPU
+		{5DB6D107-EAAB-4E72-BAC2-73FB41C25984}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
