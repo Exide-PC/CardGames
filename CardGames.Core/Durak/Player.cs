@@ -5,9 +5,11 @@ namespace CardGames.Core.Durak
 {
     public class Player
     {
-        public Player()
+        public int Id { get; }
+
+        public Player(int id)
         {
-            
+            this.Id = id;
         }
     }
 }
