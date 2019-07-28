@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CardGames.Core.Durak
@@ -6,6 +7,7 @@ namespace CardGames.Core.Durak
     public class Player
     {
         public int Id { get; }
+        public List<Card> Hand { get; } = new List<Card>();
 
         public Player(int id)
         {

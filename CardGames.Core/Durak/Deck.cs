@@ -17,7 +17,7 @@ namespace CardGames.Core.Durak
             this.Cards = new Stack<Card>(cards);
         }
 
-        public Card GetNext()
+        public Card Next()
         {
             if (this.Cards.Count == 0)
                 throw new InvalidOperationException("The deck is empty");
@@ -25,8 +25,11 @@ namespace CardGames.Core.Durak
             return this.Cards.Pop();
         }
 
-        public static Deck Shuffle()
+        public static Deck Shuffle(int cardCount)
         {
+            if (cardCount % 4 != 0)
+                throw new InvalidOperationException("Card count cant be divided by 4");
+
             CardSuit[] suits = 
             {
                 CardSuit.Diamonds,
@@ -36,9 +39,10 @@ namespace CardGames.Core.Durak
             };
 
             Random rnd = new Random();
+            int valueCount = cardCount / 4;
 
-            IEnumerable<Card> cards = Enumerable.Range(0, 36)
-                .Select(n => new Card(suits[n / 9], n % 9))
+            IEnumerable<Card> cards = Enumerable.Range(0, cardCount)
+                .Select(n => new Card(suits[n / valueCount], n % valueCount))
                 .OrderBy(c => rnd.Next());
             
             return new Deck(cards);

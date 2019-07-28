@@ -1,3 +1,4 @@
 {
-    "dotnet-test-explorer.testProjectPath": "/CardGames.Core.Tests/CardGames.Core.Tests.csproj"
+    "dotnet-test-explorer.testProjectPath": "/CardGames.Core.Tests/CardGames.Core.Tests.csproj",
+    "dotnet-test-explorer.autoExpandTree": true
 }
