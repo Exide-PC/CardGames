@@ -14,5 +14,17 @@ namespace CardGames.Core.Durak
                 .OrderBy(c => c.Value)
                 .FirstOrDefault();
         }
+
+        public static bool DoesBeat(this Card defender, Card attacker, CardSuit trumpSuit)
+        {
+            if (attacker.Suit != trumpSuit && defender.Suit == trumpSuit)
+                return true;
+            else if (attacker.Suit == trumpSuit && defender.Suit != trumpSuit)
+                return false;
+            else if (attacker.Suit == defender.Suit)
+                return defender.Value > attacker.Value;
+            else
+                return false;
+        }
     }
 }

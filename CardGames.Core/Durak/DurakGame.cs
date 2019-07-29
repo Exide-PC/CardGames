@@ -33,6 +33,7 @@ namespace CardGames.Core.Durak
         private int _defenderIndex = -1;
         private bool _attackerOrderFlag = false;
         private List<AttackEntry> _attacks = null;
+        private bool _isAnyAttackBeatenOff = false;
         #endregion
 
         public DurakGame()
@@ -102,7 +103,31 @@ namespace CardGames.Core.Durak
             if (usedCard != null && player.Hand.All(c => c != usedCard))
                 return; // you dont have this card, relax cheater
 
-            
+            if (this.IsAttack)
+            {
+                // check that card can be used for attack
+                if (_attacks.Count != 0 && _attacks.All(a => 
+                    a.Attacker.Value != usedCard.Value && 
+                    a.Defender.Value != usedCard.Value))
+                    return;
+
+                _attacks.Add(new AttackEntry(usedCard));
+            }
+            else
+            {
+                // check that used card can beat attacking one
+                Card attack = _attacks.Last().Attacker;
+
+                if (!usedCard.DoesBeat(attack, this.Trump.Suit))
+                    return;
+
+                _attacks.Last().Beat(usedCard);
+
+                // first attack is 5 cards maximum, in this case 
+                // current attacker forcibly skips his turn
+                if (_isAnyAttackBeatenOff == false && _attacks.Count == 5)
+                    this.SkipTurn(this.AttackerIndex);
+            }
         }
 
         public void SkipTurn(int playerId)
@@ -116,6 +141,7 @@ namespace CardGames.Core.Durak
 
                 if (_attackerOrderFlag == false)
                 {
+                    _isAnyAttackBeatenOff = true;
                     _attacks.Clear();
                     // filling the hands to 6 cards each
                     this.GiveAway();
