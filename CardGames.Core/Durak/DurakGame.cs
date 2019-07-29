@@ -13,10 +13,16 @@ namespace CardGames.Core.Durak
         public GameState State => _state;
         public Card Trump => _trump;
         
-        public bool IsAttack => this._attacks.Count == 0 || this._attacks.Last().IsBeaten;
+        public bool IsAttack => _attacks.Count == 0 || _attacks.Last().IsBeaten;
+        public int DefenderIndex
+        { 
+            get => _defenderIndex; 
+            set => _defenderIndex = NormalizeIndex(value);
+        }
         // returns left or right player's index depending on whose order to attack it is now
-        public int AttackerIndex => this.NormalizeIndex(_defenderIndex + (_attackerOrderFlag ? 1 : -1));
-        public int CurrentPlayerIndex => this.IsAttack ? this.AttackerIndex : _defenderIndex;
+        public int AttackerIndex => this.NormalizeIndex(this.DefenderIndex + (_attackerOrderFlag ? 1 : -1));
+        public int CurrentPlayerIndex => this.IsAttack ? this.AttackerIndex : this.DefenderIndex;
+        public Player CurrentPlayer => _players[this.CurrentPlayerIndex];
         #endregion
 
         #region Private props 
@@ -78,7 +84,7 @@ namespace CardGames.Core.Durak
             // getting attacker index in collection
             int attackerIndex = _players.IndexOf(attacker);
             // defender's index is 1 greater, but ensure the bounds are correct
-            _defenderIndex = this.NormalizeIndex(attackerIndex + 1);
+            this.DefenderIndex = attackerIndex + 1;
 
              // first attacker is player on the right
             _attackerOrderFlag = false;
@@ -88,16 +94,73 @@ namespace CardGames.Core.Durak
         }
 
         public void Turn(int playerId, Card usedCard)
-            => this.Turn(playerId, new Card[] { usedCard });
-
-        public void Turn(int playerId, IEnumerable<Card> usedCards)
         {
-            if (playerId != this.CurrentPlayerIndex)
+            Player player = this.CurrentPlayer;
+
+            if (playerId != player.Id)
+                return; // it's not your turn, relax cowboy
+            if (usedCard != null && player.Hand.All(c => c != usedCard))
+                return; // you dont have this card, relax cheater
+
+            
+        }
+
+        public void SkipTurn(int playerId)
+        {
+            if (playerId != this.CurrentPlayer.Id)
                 return;
 
-            int count = usedCards.Count();
+            if (this.IsAttack) // skip for attacker means nothing more to attack with
+            {
+                _attackerOrderFlag = !_attackerOrderFlag;
 
+                if (_attackerOrderFlag == false)
+                {
+                    _attacks.Clear();
+                    // filling the hands to 6 cards each
+                    this.GiveAway();
+                    // if the turn got back to the first attacker 
+                    // then the defender has succeed and he is the attacker now
+                    this.DefenderIndex++;
+                }
+            }
+            else // for defender it means that he cant beat the attacker and takes all cards
+            {
+                Player defender = this.CurrentPlayer;
 
+                _attacks.ForEach(attack => {
+                    if (attack.Defender != null)
+                        defender.Hand.Add(attack.Defender);
+                    defender.Hand.Add(attack.Attacker);
+                });
+
+                _attacks.Clear();
+                this.GiveAway();
+
+                // the player on the left from defender becomes an attacker, so +2
+                _attackerOrderFlag = false;
+                this.DefenderIndex += 2;
+            }
+        }
+
+        void GiveAway()
+        {
+            int defenderIndex = this.DefenderIndex;
+
+            // defender is the last taking cards from deck
+            List<Player> players = new List<Player>()
+            {
+                this.GetByIndex(defenderIndex - 1), // first attacker
+                this.GetByIndex(defenderIndex + 1), // second attacker
+                this.GetByIndex(defenderIndex) // defender
+            };
+
+            players.ForEach(p => 
+            {
+                // taking cards until there are 6 in hand
+                while (_deck.Count > 0 && p.Hand.Count < 6)
+                    p.Hand.Add(_deck.Next());
+            });
         }
 
         private int NormalizeIndex(int index)
@@ -112,19 +175,29 @@ namespace CardGames.Core.Durak
             return index;
         }
 
+        private Player GetByIndex(int index)
+        {
+            return _players[NormalizeIndex(index)];
+        }
+
         public enum GameState { Preparation, Started, Finished }
 
         public class AttackEntry
         {
             public Card Attacker { get; }
 
-            public Card Defender { get; set; }
+            public Card Defender { get; private set; }
 
             public bool IsBeaten => this.Defender != null;
 
             public AttackEntry(Card attacker)
             {
                 this.Attacker = attacker;
+            }
+
+            public void Beat(Card defender)
+            {
+                this.Defender = defender;
             }
         }
     }
