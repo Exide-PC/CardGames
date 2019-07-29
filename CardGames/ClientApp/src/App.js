@@ -1,9 +1,10 @@
 import React from 'react';
+import GameView from './components/GamveView';
 
 export default () => {
 
   return (
-    <div>adasdadas</div>
+    <GameView />
   )
 }
 
