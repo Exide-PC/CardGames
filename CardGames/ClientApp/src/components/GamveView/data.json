@@ -11,7 +11,7 @@
             "id": 2,
             "name": "Player2",
             "cards": [
-                
+
             ]
         },
         {
@@ -31,7 +31,7 @@
                     "type": "diamonds"
                 },
                 {
-                    "value": 2,
+                    "value": 8,
                     "type": "spades"
                 },
                 {
@@ -48,7 +48,7 @@
             "id": 4,
             "name": "Player4",
             "cards": [
-                
+
             ]
         }
     ]

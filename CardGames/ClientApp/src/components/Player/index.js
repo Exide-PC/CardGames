@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, useCallback, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import './style.css';
@@ -8,6 +8,7 @@ import Modal from "../Modal";
 const Player = ({ id, name, cards, index }) => {
 
   const [activeModal, setActiveModal] = useState(false);
+  const [activeCard, setActiveCard] = useState('');
 
   const toggleModal = () => {
     if (window.modalId) return;
@@ -23,7 +24,13 @@ const Player = ({ id, name, cards, index }) => {
       <div key={id} className={`player player-${index}`}>
         <div className="cards">
           {cards.map((card, index) => (
-            <Card key={index} {...card} toggleModal={toggleModal} />
+            <Card
+              {...card}
+              key={index}
+              toggleModal={toggleModal}
+              setActive={() => setActiveCard(`${card.value}-${card.type}`)}
+              isActive={activeCard === `${card.value}-${card.type}`}
+            />
           ))}
         </div>
         <div className="player__cards" />

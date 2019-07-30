@@ -1,5 +1,6 @@
 .cards {
     display: flex;
+    margin-bottom: 30px;
 }
 
 .cards__card {
@@ -7,8 +8,9 @@
     height: 100px;
     margin-right: 10px;
     cursor: pointer;
+    transition: transform .3s;
 }
 
-.cards__card:hover {
-    outline: 1px solid black;
+.cards__card--active {
+    transform: scale(1.3)
 }
