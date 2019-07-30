@@ -1,0 +1,14 @@
+.cards {
+    display: flex;
+}
+
+.cards__card {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.cards__card:hover {
+    outline: 1px solid black;
+}

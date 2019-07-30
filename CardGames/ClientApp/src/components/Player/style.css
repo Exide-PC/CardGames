@@ -34,12 +34,3 @@
     top: 50%;
     transform: translateY(-50%);
 }
-
-.cards {
-    display: flex;
-}
-
-.cards__card {
-    width: 60px;
-    height: 60px;
-}

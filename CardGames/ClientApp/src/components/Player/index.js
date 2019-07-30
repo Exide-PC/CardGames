@@ -1,29 +1,38 @@
-import React from 'react';
+import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import './style.css';
-
-import card_2_clubs from '../../images/card-2-clubs.svg'
+import Card from '../Card'
+import Modal from "../Modal";
 
 const Player = ({ id, name, cards, index }) => {
 
-  return (
-    <div 
-      key={id} 
-      className={`player player-${index}`}
-    >
-      <div className='cards'>
-        {cards.map((card, index) => (
-          <div className='cards__card' key={index} style={{ background: `url(${card_2_clubs})` }} />
-        ))}
-      </div>
-      <div className='player__cards' />
-      {name}
-    </div>
-  )
-}
+  const [activeModal, setActiveModal] = useState(false);
 
-// Перенести карты в отдельный компонент
+  const toggleModal = () => {
+    if (window.modalId) return;
+    setActiveModal(true);
+    window.modalId = setTimeout(() => {
+      setActiveModal(false);
+      window.modalId = null;
+    }, 2000);
+  }
+
+  return (
+    <Fragment>
+      <div key={id} className={`player player-${index}`}>
+        <div className="cards">
+          {cards.map((card, index) => (
+            <Card key={index} {...card} toggleModal={toggleModal} />
+          ))}
+        </div>
+        <div className="player__cards" />
+        {name}
+      </div>
+      {activeModal && <Modal />}
+    </Fragment>
+  );
+}
 
 Player.propTypes = {
   id: PropTypes.number,
