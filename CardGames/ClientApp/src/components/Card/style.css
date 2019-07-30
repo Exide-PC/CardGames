@@ -6,7 +6,6 @@
 .cards__card {
     width: 100px;
     height: 100px;
-    margin-right: 10px;
     cursor: pointer;
     transition: transform .3s;
 }

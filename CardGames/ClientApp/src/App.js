@@ -1,6 +1,6 @@
 import React from 'react';
 
-import GameView from './components/GamveView';
+import GameView from './components/GameView';
 
 export default () => {
 
