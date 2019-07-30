@@ -129,20 +129,12 @@ namespace CardGames.Core.Durak
                 // first attack is 5 cards maximum, in this case 
                 // current attackers forcibly skip their turns
                 if (_isAnyAttackBeatenOff == false && _attacks.Count == 5)
-                    this.NextStage();
+                    this.NextStage(hasDefended: true);
 
-                // check if current attacker is forced to skip his turn
-                if (!CanAttack(this.CurrentPlayer))
-                {
-                    // attacker index is changed here, 
-                    // so CurrentPlayerIndex will be new after this call
+                // looking for first attacker who has cards to attack with
+                while (!CanAttack(this.CurrentPlayer))
+                    // if there is no one, the NextStage(true) will be called eventually
                     this.SkipTurn(this.CurrentPlayerIndex);
-
-                    // check if another attacker is forced to skip turn
-                    if (!CanAttack(this.CurrentPlayer))
-                        // if both skipped, NextStage() will be called inside
-                        this.SkipTurn(this.CurrentPlayerIndex);
-                }
             }
         }
 
@@ -158,7 +150,7 @@ namespace CardGames.Core.Durak
 
                 // if both attackers skipped turns then we move to the next stage
                 if (_attackersSkippedTurns == 2)
-                    this.NextStage();
+                    this.NextStage(hasDefended: true);
             }
             else // for defender it means that he cant beat the attacker and takes all cards
             {
@@ -170,12 +162,7 @@ namespace CardGames.Core.Durak
                     defender.Hand.Add(attack.Attacker);
                 });
 
-                _attacks.Clear();
-                this.GiveAway();
-
-                // the player on the left from defender becomes an attacker, so +2
-                _attackerOrderFlag = false;
-                this.DefenderIndex += 2;
+                this.NextStage(hasDefended: false);
             }
         }
 
@@ -199,16 +186,15 @@ namespace CardGames.Core.Durak
             });
         }
         
-        private void NextStage()
+        private void NextStage(bool hasDefended)
         {
-            _isAnyAttackBeatenOff = true;
+            _isAnyAttackBeatenOff = hasDefended ? true : _isAnyAttackBeatenOff;
             _attackerOrderFlag = false;
+            _attackersSkippedTurns = 0;
             _attacks.Clear();
-            // filling the hands to 6 cards each
+
             this.GiveAway();
-            // if the turn got back to the first attacker 
-            // then the defender has succeed and he is the attacker now
-            this.DefenderIndex++;
+            this.DefenderIndex += hasDefended ? 1 : 2;
         }
 
         private int NormalizeIndex(int index)
