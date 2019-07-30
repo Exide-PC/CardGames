@@ -136,6 +136,10 @@ namespace CardGames.Core.Durak
                     // if there is no one, the NextStage(true) will be called eventually
                     this.SkipTurn(this.CurrentPlayerIndex);
             }
+
+            // end game check
+            if (_deck.Count == 0 && _players.Where(p => p.Hand.Count > 0).Count() == 1)
+                _state = GameState.Finished;
         }
 
         public void SkipTurn(int playerId)
