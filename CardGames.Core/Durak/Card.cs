@@ -30,7 +30,16 @@ namespace CardGames.Core.Durak
         }
 
         public static bool operator == (Card one, Card another)
-        {
+        {       
+            int nullCount = 0;
+            nullCount += object.ReferenceEquals(one, null) ? 1 : 0;
+            nullCount += object.ReferenceEquals(another, null) ? 1 : 0;
+            
+            if (nullCount == 1)
+                return false;
+            else if (nullCount == 2)
+                return true;
+
             return one.Suit == another.Suit && one.Value == another.Value;
         }
 

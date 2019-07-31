@@ -32,13 +32,28 @@ namespace CardGames.Core.Durak
         private Card _trump = null;
         private int _defenderIndex = -1;
         private bool _attackerOrderFlag = false;
-        private List<AttackEntry> _attacks = null;
+        private List<AttackEntry> _attacks = new List<AttackEntry>();
         private bool _isAnyAttackBeatenOff = false;
         private int _attackersSkippedTurns = 0;
         #endregion
 
-        public DurakGame()
+        public DurakGame(IEnumerable<Card> deck, IEnumerable<Player> players, Card trump = null, int defenderIndex = -1)
         {
+            if (trump == null && (deck == null || deck?.Count() == 0))
+                throw new Exception("No trump is specified");
+            if (players?.Count() < 2)
+                throw new Exception("Less than 2 players");
+
+            _trump = trump ?? deck.Last();
+            _deck = new Deck(deck ?? Enumerable.Empty<Card>());
+            _players = players.ToList();
+
+            this.DefenderIndex = defenderIndex >= 0 ? defenderIndex : 0;
+            _state = GameState.Started;          
+        }
+
+        public DurakGame()
+        {            
         }
 
         public void AddPlayer(int id)
