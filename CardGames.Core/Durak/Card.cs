@@ -2,7 +2,7 @@ using System;
 
 namespace CardGames.Core.Durak
 {
-    public class Card
+    public class Card: IEquatable<Card>
     {
         public enum CardSuit { Spades, Clubs, Diamonds, Hearts }
 
@@ -15,10 +15,6 @@ namespace CardGames.Core.Durak
             this.Value = value;
         }
 
-        public override bool Equals(object obj)
-        {
-            return this == (Card)obj;
-        }
 
         public override int GetHashCode()
         {
@@ -29,18 +25,24 @@ namespace CardGames.Core.Durak
             return hashCode;
         }
 
-        public static bool operator == (Card one, Card another)
-        {       
-            int nullCount = 0;
-            nullCount += object.ReferenceEquals(one, null) ? 1 : 0;
-            nullCount += object.ReferenceEquals(another, null) ? 1 : 0;
-            
-            if (nullCount == 1)
-                return false;
-            else if (nullCount == 2)
-                return true;
+        public override bool Equals(object obj)
+        {
+            return this.Equals((Card)obj);
+        }
 
-            return one.Suit == another.Suit && one.Value == another.Value;
+        public bool Equals(Card other)
+        {
+            return (object)other != null // here we need a reference check
+                ? this.Suit == other.Suit && this.Value == other.Value
+                : false;
+        }
+
+        public static bool operator == (Card lhs, Card rhs)
+        {
+            // semantic requirements of the equality operator:
+            // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/statements-expressions-operators/how-to-define-value-equality-for-a-type
+            return object.ReferenceEquals(lhs, rhs)
+                || !object.ReferenceEquals(lhs, null) && lhs.Equals(rhs);
         }
 
         public static bool operator != (Card one, Card another)
