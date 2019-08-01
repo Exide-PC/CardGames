@@ -25,28 +25,36 @@ namespace Tests
             game.AddPlayer(1);
             game.Start();
 
-            Assert.That(game.Trump == game.Deck.Last());
+            Assert.That(game.Trump == game.Deck.Last().Suit);
         }
 
         [Test]
-        public void Test_Foo()
+        public void Test_Turn()
         {
             var players = GetPlayers(
                 new Card[]
                 {
-                    new Card(CardSuit.Clubs, 0),
-                    new Card(CardSuit.Clubs, 2)
+                    new Card(CardSuit.Diamonds, 0),
+                    new Card(CardSuit.Diamonds, 2)
                 },
                 new Card[]
                 {
-                    new Card(CardSuit.Clubs, 1),
-                    new Card(CardSuit.Clubs, 3)
+                    new Card(CardSuit.Diamonds, 1),
+                    new Card(CardSuit.Diamonds, 5),
+                    new Card(CardSuit.Clubs, 5)                    
                 }
             );
 
-            DurakGame game = new DurakGame(deck: null, players, new Card(CardSuit.Clubs, 4));
+            DurakGame game = new DurakGame(players, deck: null, CardSuit.Clubs);
+            
+            Assert.Throws<GameException>(() => game.Turn(0, new Card(CardSuit.Clubs, 0)));
+            Assert.DoesNotThrow(() => game.Turn(0, new Card(CardSuit.Diamonds, 2)));
+            Assert.That(game.CurrentPlayerIndex == 1);
+            Assert.That(game.Players[0].Hand.Count == 1);
 
-            Assert.That(false);
+            Assert.Throws<GameException>(() => game.Turn(0, new Card(CardSuit.Diamonds, 0)));
+            Assert.Throws<GameException>(() => game.Turn(1, new Card(CardSuit.Diamonds, 1)));
+            Assert.DoesNotThrow(() => game.Turn(1, new Card(CardSuit.Clubs, 5)));
         }
 
         List<Player> GetPlayers(params IEnumerable<Card>[] playerCards)
