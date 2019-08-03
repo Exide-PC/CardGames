@@ -31,6 +31,7 @@ namespace CardGames
                     Configuration.GetValue<string>("JWTSecretKey"),
                     Configuration.GetValue<int>("JWTLifespan")
                 ));
+            services.AddSingleton<GameLobbyService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
