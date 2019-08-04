@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using CardGames.Services;
 using CardGames.Models;
-using CardGames.Core;
 using System.ComponentModel.DataAnnotations;
 using CardGames.Core.Presenters;
-using Microsoft.AspNetCore.Http;
 using System;
 using CardGames.Core.Durak;
 
@@ -30,8 +28,12 @@ namespace CardGames.Controllers
         [HttpGet("list")]
         public IEnumerable<LobbyInfo> GetLobbies()
         {
+            // TODO: Remove, just for debug
+            var token1 = _authService.CreatePlayerToken("test", 0, true);
+            var token2 = _authService.CreatePlayerToken("test", 1, false);
+            var token3 = _authService.CreatePlayerToken("test", 2, false);
+
             return _lobbyService.GetLobbies();
-            //return Ok(_lobbyService.GetLobbies());
         }
 
         // lobby/create?type=durak

@@ -32,21 +32,48 @@ namespace CardGames.Core.Presenters
             return id;
         }
 
-        public ResultModel Turn(int playerId, CardSuit suit, int value)
+        public void Start()
         {
-            _game.Turn(playerId, new Card(suit, value));
-            throw new NotImplementedException();
+            _game.Start();
+        }
+
+        public void Turn(int playerId, Card card)
+        {
+            _game.Turn(playerId, card);
         }
 
         public void SkipTurn(int playerId)
         {
             _game.SkipTurn(playerId);
-            throw new NotImplementedException();
         }
 
-        public void GetState(int playerId)
+        public PlayerState GetState(int playerId)
         {
-            throw new NotImplementedException();
+            return new PlayerState
+            {
+                Hand = _game.Players.First(p => p.Id == playerId).Hand,
+                Trump = _game.Trump,
+                GameState = _game.State.ToString(),
+                DeckCount = _game.Deck.Count,
+                IsAttack = _game.IsAttack,
+                DefenderId = _game.Players[_game.DefenderIndex].Id,
+                AttackerId = _game.Players[_game.AttackerIndex].Id,
+                CurrentPlayerId = _game.CurrentPlayer.Id,
+                Players = _game.Players.Select(p => new {Id = p.Id, Name = _nameMap[p.Id]})
+            };
+        }
+
+        public class PlayerState
+        {
+            public IEnumerable<Card> Hand { get; set; }
+            public CardSuit Trump { get; internal set; }
+            public string GameState { get; set; }
+            public int DeckCount { get; set; }
+            public bool IsAttack { get; set; }
+            public int DefenderId { get; internal set; }
+            public int AttackerId { get; set; }
+            public int CurrentPlayerId { get; set; }
+            public IEnumerable<object> Players { get; set; }
         }
     }
 }

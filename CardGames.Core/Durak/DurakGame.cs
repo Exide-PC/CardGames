@@ -121,9 +121,9 @@ namespace CardGames.Core.Durak
             Player player = this.CurrentPlayer;
 
             if (playerId != player.Id)
-                throw new GameException(); // it's not your turn, relax cowboy
+                throw new GameException($"It's id {this.CurrentPlayerIndex}'s turn, not {playerId}'s");
             if (usedCard != null && player.Hand.All(c => c != usedCard))
-                throw new GameException(); // you dont have this card, relax cheater
+                throw new GameException($"User with {playerId} doesn't have card {usedCard}");
 
             if (this.IsAttack)
             {
@@ -131,7 +131,7 @@ namespace CardGames.Core.Durak
                 if (_attacks.Count != 0 && _attacks.All(a => 
                     a.Attacker.Value != usedCard.Value && 
                     a.Defender.Value != usedCard.Value))
-                    throw new GameException();
+                    throw new GameException($"Card {usedCard} can't be used for attack");
 
                 _attacks.Add(new AttackEntry(usedCard));                
             }
@@ -141,7 +141,7 @@ namespace CardGames.Core.Durak
                 Card attack = _attacks.Last().Attacker;
 
                 if (!usedCard.DoesBeat(attack, _trump))
-                    throw new GameException();
+                    throw new GameException($"{usedCard} doesn't beat {attack}");
 
                 _attacks.Last().Beat(usedCard);
                  // both attackers got a chance to use a card again
@@ -171,7 +171,7 @@ namespace CardGames.Core.Durak
         public void SkipTurn(int playerId)
         {
             if (playerId != this.CurrentPlayer.Id)
-                throw new GameException();
+                throw new GameException($"It's id {this.CurrentPlayerIndex}'s turn, not {playerId}'s");
 
             if (this.IsAttack) // skip for attacker means nothing more to attack with
             {

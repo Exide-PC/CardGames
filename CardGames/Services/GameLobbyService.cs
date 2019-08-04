@@ -11,6 +11,21 @@ namespace CardGames.Services
     {
         public List<PresenterBase> Games { get; } = new List<PresenterBase>();
 
+        public GameLobbyService()
+        {
+            #if DEBUG
+            DurakPresenter game = new DurakPresenter();
+
+            game.Uid = "test";
+            game.AddPlayer("Rib0");
+            game.AddPlayer("Exide");
+            game.AddPlayer("Leviy hren");
+            game.Start();
+
+            this.Games.Add(game);
+            #endif
+        }
+
         public T GetByUid<T>(string uid) where T: PresenterBase
         {
             return (T)this.Games.FirstOrDefault(g => g.Uid == uid);

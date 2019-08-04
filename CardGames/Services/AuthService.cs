@@ -30,8 +30,8 @@ namespace CardGames.Services
         public AuthData CreatePlayerToken(string gameUid, int playerId, bool isAdmin)
         {
             List<Claim> claims = new List<Claim> {
-                new Claim("GameUid", gameUid),
-                new Claim("PlayerId", playerId.ToString()),
+                new Claim(GameClaim.GameUid.ToString(), gameUid),
+                new Claim(GameClaim.PlayerId.ToString(), playerId.ToString()),
             };
             
             if (isAdmin)

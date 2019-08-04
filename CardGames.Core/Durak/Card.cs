@@ -15,6 +15,7 @@ namespace CardGames.Core.Durak
             this.Value = value;
         }
 
+        public override string ToString() => $"{this.Value}-{this.Suit}";
 
         public override int GetHashCode()
         {

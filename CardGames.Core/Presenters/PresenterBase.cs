@@ -5,7 +5,7 @@ namespace CardGames.Core.Presenters
 {
     public abstract class PresenterBase
     {
-        public string Uid { get; } = Guid.NewGuid().ToString();
+        public string Uid { get; set; } = Guid.NewGuid().ToString();
         
         public abstract GameType Type { get; }
         public abstract IEnumerable<string> Players { get; }
