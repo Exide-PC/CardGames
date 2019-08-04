@@ -1,4 +1,5 @@
-﻿﻿using Microsoft.IdentityModel.Tokens;
+﻿﻿using CardGames.Models;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,19 +10,13 @@ using System.Threading.Tasks;
 
 namespace CardGames.Services
 {
-    public interface IAuthService
-    {
-        AuthData Login(string login, string password);
-    }
-
     public class AuthData
     {
         public string Token { get; set; }
         public long Expires { get; set; }
-        public string Name { get; set; }
     }
 
-    public class AuthService: IAuthService
+    public class AuthService
     {
         readonly string jwtSecret;
         readonly int jwtLifespan;
@@ -31,34 +26,27 @@ namespace CardGames.Services
             this.jwtSecret = jwtSecret;
             this.jwtLifespan = jwtLifespan;
         }
-        public AuthData Login(string login, string password)
+        
+        public AuthData JoinGame(string gameUid, int playerId, bool isAdmin)
         {
-            #if DEBUG
-            var devUsers = new Dictionary<string, string>()
-            {
-                ["rib0"] = "rib0",
-                ["exide"] = "exide"
+            List<Claim> claims = new List<Claim> {
+                new Claim("GameUid", gameUid),
+                new Claim("PlayerId", playerId.ToString()),
             };
+            
+            if (isAdmin)
+                claims.Add(new Claim(ClaimTypes.Role, Role.Admin.ToString()));
 
-            if (devUsers.All(u => u.Key != login) || devUsers[login] != password)
-                return null;
-                
-            #elif RELEASE
-            return null; // will be implemented later
-            #endif 
+            return CreateToken(claims);
+        }
 
-
-            // At this moment we know the authentification is successful
-
-            // TODO: get claims from database (admin or user)
+        public AuthData CreateToken(IEnumerable<Claim> claims)
+        {
             var expirationTime = DateTime.UtcNow.AddSeconds(jwtLifespan);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Role, "admin")
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = expirationTime,
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
@@ -73,8 +61,7 @@ namespace CardGames.Services
             return new AuthData
             {
                 Token = token,
-                Expires = ((DateTimeOffset)expirationTime).ToUnixTimeSeconds(),
-                Name = login
+                Expires = ((DateTimeOffset)expirationTime).ToUnixTimeSeconds()
             };
         }
     }

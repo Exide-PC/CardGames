@@ -17,7 +17,7 @@ namespace CardGames.Controllers
     [ApiController]
     public class AuthController : Controller
     {
-        private IAuthService _authService;
+        private AuthService _authService;
 
         public class LoginParameters
         {
@@ -25,23 +25,9 @@ namespace CardGames.Controllers
             public string Password { get; set; }
         }
 
-        public AuthController(IAuthService authService)
+        public AuthController(AuthService authService)
         {
             this._authService = authService;
-        }
-
-        [AllowAnonymous]
-        [HttpPost("[action]")]
-        public ActionResult<AuthData> Login([FromForm]LoginParameters loginData)
-        {
-            var token = _authService.Login(
-                loginData.Login, 
-                loginData.Password);
-
-            if (token == null)
-                return Unauthorized();
-
-            return token;
         }
     }
 }

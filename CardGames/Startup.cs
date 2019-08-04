@@ -26,7 +26,7 @@ namespace CardGames
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             
-            services.AddSingleton<IAuthService>(
+            services.AddSingleton<AuthService>(
                 new AuthService(
                     Configuration.GetValue<string>("JWTSecretKey"),
                     Configuration.GetValue<int>("JWTLifespan")
