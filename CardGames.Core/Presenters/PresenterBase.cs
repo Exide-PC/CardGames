@@ -1,10 +1,15 @@
 using System;
+using System.Collections.Generic;
 
 namespace CardGames.Core.Presenters
 {
     public abstract class PresenterBase
     {
         public string Uid { get; } = Guid.NewGuid().ToString();
+        
+        public abstract GameType Type { get; }
+        public abstract IEnumerable<string> Players { get; }
+        public abstract bool HasSlots { get; }
 
         protected ResultModel Bad(string msg) => new ResultModel(false, msg);
         protected ResultModel Ok() => new ResultModel(true, null);

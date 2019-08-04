@@ -27,7 +27,7 @@ namespace CardGames.Services
             this.jwtLifespan = jwtLifespan;
         }
         
-        public AuthData JoinGame(string gameUid, int playerId, bool isAdmin)
+        public AuthData CreatePlayerToken(string gameUid, int playerId, bool isAdmin)
         {
             List<Claim> claims = new List<Claim> {
                 new Claim("GameUid", gameUid),

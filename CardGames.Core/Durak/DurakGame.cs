@@ -61,9 +61,12 @@ namespace CardGames.Core.Durak
 
         public void AddPlayer(int id)
         {
-            // player additions are only allowed during preparation 
-            if (_state != GameState.Preparation || _players.Count == 5 || _players.Any(p => p.Id == id))
-                throw new GameException();
+            if (_state != GameState.Preparation)
+                throw new GameStateException();
+            if (_players.Count == 5 )
+                throw new MaxPlayersException();
+            if (_players.Any(p => p.Id == id))
+                throw new AlreadyExistsException();
 
             _players.Add(new Player(id));
         }
