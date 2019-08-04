@@ -7,6 +7,8 @@ using CardGames.Core;
 using System.ComponentModel.DataAnnotations;
 using CardGames.Core.Presenters;
 using Microsoft.AspNetCore.Http;
+using System;
+using CardGames.Core.Durak;
 
 namespace CardGames.Controllers
 {
@@ -45,19 +47,28 @@ namespace CardGames.Controllers
             [FromQuery][Required] string name)
         {
             var game = _lobbyService.GetByUid<DurakPresenter>(uid);
-            var result = game.AddPlayer(name);
-            
-            if (!result.Success)
-                return BadRequest(result);
+            if (game == null)
+                return NotFound($"There is no game with uid {uid}");
 
-            AuthData authData = _authService.CreatePlayerToken(uid, result.Id.Value, false);
-
-            return Ok(new
+            try
             {
-                authData = authData,
-                actionResult = result
-            });
+                int id = game.AddPlayer(name);
+                AuthData authData = _authService.CreatePlayerToken(uid, id, false);
 
+                return Ok(new
+                {
+                    playerId = id,
+                    authData = authData
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return Conflict(ex.Message);
+            }
+            catch (GameException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

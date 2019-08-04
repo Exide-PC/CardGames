@@ -62,11 +62,11 @@ namespace CardGames.Core.Durak
         public void AddPlayer(int id)
         {
             if (_state != GameState.Preparation)
-                throw new GameStateException();
+                throw new GameException($"You cant add a player when game state is {_state}");
             if (_players.Count == 5 )
-                throw new MaxPlayersException();
+                throw new GameException("There is already max player count");
             if (_players.Any(p => p.Id == id))
-                throw new AlreadyExistsException();
+                throw new GameException($"There is already player with id {id}");
 
             _players.Add(new Player(id));
         }
