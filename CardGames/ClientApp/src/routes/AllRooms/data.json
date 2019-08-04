@@ -1,0 +1,36 @@
+{
+    "rooms": [
+        {
+            "players": [
+                {
+                    "name": "player1"
+                },
+                {
+                    "name": "player2"
+                },
+                {
+                    "name": "player3"
+                }
+            ],
+            "uuid": 1
+        },
+        {
+            "players": [
+
+            ],
+            "uuid": 2
+        },
+        {
+            "players": [
+
+            ],
+            "uuid": 3
+        },
+        {
+            "players": [
+
+            ],
+            "uuid": 4
+        }
+    ]
+}

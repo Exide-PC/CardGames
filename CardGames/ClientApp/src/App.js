@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { Route } from 'react-router-dom';
 
-import GameView from './components/GameView';
+import GameView from './routes/GameView';
+import AllRooms from './routes/AllRooms';
 
 export default () => {
 
   return (
-      <GameView />
+    <Fragment>
+      {/* <GameView /> */}
+      <AllRooms />
+    </Fragment>
   )
 }
 

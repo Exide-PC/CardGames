@@ -1,0 +1,6 @@
+.inner-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 50px -15px 0;
+    width: 100%;
+}
