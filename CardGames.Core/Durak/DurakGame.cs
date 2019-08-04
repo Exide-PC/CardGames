@@ -15,6 +15,7 @@ namespace CardGames.Core.Durak
         public Deck Deck => _deck;
         public GameState State => _state;
         public CardSuit Trump => _trump;
+        public IEnumerable<AttackEntry> Attacks => _attacks.AsReadOnly();
         
         public bool IsAttack => _attacks.Count == 0 || _attacks.Last().IsBeaten;
         public int DefenderIndex

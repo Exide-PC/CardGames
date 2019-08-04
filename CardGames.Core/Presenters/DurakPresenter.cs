@@ -59,7 +59,8 @@ namespace CardGames.Core.Presenters
                 DefenderId = _game.Players[_game.DefenderIndex].Id,
                 AttackerId = _game.Players[_game.AttackerIndex].Id,
                 CurrentPlayerId = _game.CurrentPlayer.Id,
-                Players = _game.Players.Select(p => new {Id = p.Id, Name = _nameMap[p.Id]})
+                Players = _game.Players.Select(p => new {Id = p.Id, Name = _nameMap[p.Id]}),
+                Attacks = _game.Attacks.Select(a => (attacker: a.Attacker, defender: a.Defender))
             };
         }
 
@@ -74,6 +75,7 @@ namespace CardGames.Core.Presenters
             public int AttackerId { get; set; }
             public int CurrentPlayerId { get; set; }
             public IEnumerable<object> Players { get; set; }
+            public IEnumerable<(Card attacker, Card defender)> Attacks { get; set; }
         }
     }
 }
