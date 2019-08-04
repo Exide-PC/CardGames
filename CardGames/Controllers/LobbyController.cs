@@ -31,13 +31,25 @@ namespace CardGames.Controllers
         public IEnumerable<LobbyInfo> GetLobbies()
         {
             return _lobbyService.GetLobbies();
+            //return Ok(_lobbyService.GetLobbies());
         }
 
         // lobby/create?type=durak
         [HttpPost("create")]
-        public void Create([FromQuery] GameType value)
+        public IActionResult Create([FromQuery][Required]string name)
         {
+            string uid = _lobbyService.CreateLobby();
+
+            var game = _lobbyService.GetByUid<DurakPresenter>(uid);
+            int playerId = game.AddPlayer(name);
             
+            var authData = _authService.CreatePlayerToken(uid, playerId, true);
+            return Ok(new
+            {
+                gameUid = uid,
+                playerId = playerId,
+                auth = authData
+            });
         }
 
         // lobby/join?uid=UID&name=NAME
@@ -58,7 +70,7 @@ namespace CardGames.Controllers
                 return Ok(new
                 {
                     playerId = id,
-                    authData = authData
+                    auth = authData
                 });
             }
             catch (ArgumentException ex)

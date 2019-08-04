@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CardGames.Core;
 using CardGames.Core.Presenters;
 using CardGames.Models;
 
@@ -26,6 +27,13 @@ namespace CardGames.Services
                     HasSlots = g.HasSlots
                 };
             });
+        }
+
+        public string CreateLobby()
+        {
+            DurakPresenter game = new DurakPresenter();
+            this.Games.Add(game);
+            return game.Uid;
         }
     }
 }

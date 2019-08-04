@@ -40,7 +40,7 @@ namespace CardGames.Services
             return CreateToken(claims);
         }
 
-        public AuthData CreateToken(IEnumerable<Claim> claims)
+        private AuthData CreateToken(IEnumerable<Claim> claims)
         {
             var expirationTime = DateTime.UtcNow.AddSeconds(jwtLifespan);
 

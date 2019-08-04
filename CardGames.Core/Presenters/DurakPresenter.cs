@@ -27,6 +27,7 @@ namespace CardGames.Core.Presenters
             var players = _game.Players.OrderBy(p => p.Id);
             int id = players.Any() ? players.Last().Id + 1 : 0;
 
+            _nameMap.Add(id, name);
             _game.AddPlayer(id);
             return id;
         }
