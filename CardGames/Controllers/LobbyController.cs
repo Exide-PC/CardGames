@@ -26,12 +26,14 @@ namespace CardGames.Controllers
 
         // lobby/list
         [HttpGet("list")]
-        public IEnumerable<LobbyInfo> GetLobbies()
+        public IEnumerable<LobbyInfo> GetList()
         {
+            #if DEBUG
             // TODO: Remove, just for debug
             var token1 = _authService.CreatePlayerToken("test", 0, true);
             var token2 = _authService.CreatePlayerToken("test", 1, false);
             var token3 = _authService.CreatePlayerToken("test", 2, false);
+            #endif
 
             return _lobbyService.GetLobbies();
         }

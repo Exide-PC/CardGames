@@ -14,6 +14,7 @@ namespace CardGames.Services
         public GameLobbyService()
         {
             #if DEBUG
+            // TODO: Remove, just for debug
             DurakPresenter game = new DurakPresenter();
 
             game.Uid = "test";
