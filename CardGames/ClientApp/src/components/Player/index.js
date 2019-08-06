@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import './style.css';
 import Card from '../Card'
-import Modal from "../Modal";
+// import Modal from "../Modal";
 
 const Player = ({ id, name, cards, index }) => {
 
@@ -36,7 +36,7 @@ const Player = ({ id, name, cards, index }) => {
         <div className="player__cards" />
         {name}
       </div>
-      {activeModal && <Modal />}
+      {/* {activeModal && <Modal />} */}
     </Fragment>
   );
 }

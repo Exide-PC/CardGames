@@ -1,0 +1,72 @@
+@keyframes modal {
+    0% {
+        top: -100%;
+    }
+
+    100% {
+        top: 50%;
+    }
+}
+
+@keyframes opacity {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: .4;
+    }
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    animation: modal .4s;
+    background: white;
+    z-index: 9999;
+    width: 25%;
+    padding: 30px 0;
+    border-radius: 10px;
+}
+
+.modal__input-container {
+    position: relative;
+}
+
+.modal__input {
+    border: none;
+    border-bottom: 1px solid black;
+    outline: none;
+    margin-top: 20px;
+    width: 50%;
+}
+
+.modal__input:focus + .modal__line {
+    width: 50%;
+}
+
+.modal__line {
+    position: absolute;
+    background: black;
+    width: 0;
+    height: 3px;
+    left: 50%;
+    bottom: -1px;
+    transform: translateX(-50%);
+    transition: width .3s;
+}
+
+.shadow-field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: black;
+    opacity: .4;
+    animation: opacity .4s;
+    z-index: 999;
+}
