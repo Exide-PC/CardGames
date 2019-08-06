@@ -66,7 +66,7 @@
 }
 
 .room:hover:before {
-    transition: width .5s;
+    transition: width .3s;
     transition-delay: .5s;
     width: 55%;
 }
