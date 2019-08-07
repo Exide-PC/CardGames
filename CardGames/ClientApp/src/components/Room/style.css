@@ -6,6 +6,7 @@
 }
 
 .room {
+    border: 4px solid rgba(128, 128, 128, 0.404);
     border-radius: 20px;
     padding: 10px;
     display: flex;
