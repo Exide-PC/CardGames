@@ -39,7 +39,7 @@ namespace CardGames.Services
                 return new LobbyInfo
                 {
                     Uid = g.Uid,
-                    Players = g.Players,
+                    Players = g.PlayerNames,
                     HasSlots = g.HasSlots
                 };
             });

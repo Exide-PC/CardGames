@@ -10,27 +10,23 @@ namespace CardGames.Core.Presenters
     {         
         #region PresenterBase implementation
         public override GameType Type => GameType.Durak;
-        public override IEnumerable<string> Players => _nameMap.Values;
+        public override IEnumerable<string> PlayerNames => _players.Select(p => p.Name);
         public override bool HasSlots => _game.Players.Count < 5;
         #endregion
 
-        public DurakGame.GameState State => _game.State;
-
-        Dictionary<int, string> _nameMap = new Dictionary<int, string>();
-        Dictionary<int, bool> _readyMap = new Dictionary<int, bool>();
         DurakGame _game = new DurakGame();
+        List<Player> _players = new List<Player>();
 
         public int AddPlayer(string name)
         {
-            if (_nameMap.Values.Contains(name))
+            if (_players.Any(p => p.Name == name))
                 throw new ArgumentException($"There is already player with name {name}");
                
             var players = _game.Players.OrderBy(p => p.Id);
             int id = players.Any() ? players.Last().Id + 1 : 0;
 
-            _nameMap[id] = name;
-            _readyMap[id] = false;
             _game.AddPlayer(id);
+            _players.Add(new Player() { Id = id, Name = name });
             return id;
         }
 
@@ -51,9 +47,9 @@ namespace CardGames.Core.Presenters
 
         public void SetPlayerReady(int playerId, bool isReady)
         {
-            _readyMap[playerId] = isReady;
+            _players.First(p => p.Id == playerId).IsReady = isReady;
 
-            if (isReady && _readyMap.Values.All(v => v) && _game.Players.Count >= 2)
+            if (isReady && _players.All(p => p.IsReady) && _game.Players.Count >= 2)
                 _game.Start();
         }
 
@@ -68,7 +64,7 @@ namespace CardGames.Core.Presenters
                 DefenderId = _game.Players[_game.DefenderIndex].Id,
                 AttackerId = _game.Players[_game.AttackerIndex].Id,
                 CurrentPlayerId = _game.CurrentPlayer.Id,
-                Players = _game.Players.Select(p => new {Id = p.Id, Name = _nameMap[p.Id]}),
+                Players = _players,
                 Hand = _game.Players.First(p => p.Id == playerId).Hand.Select(c => new NamedCard(c)),
                 Attacks = _game.Attacks.Select(a => (new NamedCard(a.Attacker), new NamedCard(a.Defender)))
             };
@@ -123,8 +119,9 @@ namespace CardGames.Core.Presenters
 
         public class Player
         {
+            public int Id { get; set; }
             public string Name { get; set; }
-            public bool IsReady { get; set; }
+            public bool IsReady { get; set; } = false;
         }
     }
 }
