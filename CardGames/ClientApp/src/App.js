@@ -1,16 +1,17 @@
 import React, { Fragment } from 'react';
 import { Route } from 'react-router-dom';
 
-import GameView from './routes/GameView';
-import AllRooms from './routes/AllRooms';
+import routes from './routes';
 
-export default () => {
-
+const App = () => {
   return (
     <Fragment>
-      {/* <GameView /> */}
-      <AllRooms />
+      {routes.map(({ Component, ...props }, index) => (
+          <Route key={index} {...props} />
+      ))}
     </Fragment>
   )
 }
+
+export default App;
 

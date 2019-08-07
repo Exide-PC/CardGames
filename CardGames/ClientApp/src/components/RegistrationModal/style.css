@@ -18,6 +18,22 @@
     }
 }
 
+@keyframes error {
+    25% {
+        color: red;
+        transform: rotate(10deg)
+    }
+
+    50% {
+        color: black;
+        transform: rotate(-10deg)
+    }
+
+    75% {
+        color: red;
+    }
+}
+
 .modal {
     position: fixed;
     top: 50%;
@@ -30,6 +46,11 @@
     width: 25%;
     padding: 30px 0;
     border-radius: 10px;
+    user-select: none;
+}
+
+.modal__error {
+    animation: error 1s;
 }
 
 .modal__input-container {
