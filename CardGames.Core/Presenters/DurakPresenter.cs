@@ -17,6 +17,7 @@ namespace CardGames.Core.Presenters
         public DurakGame.GameState State => _game.State;
 
         Dictionary<int, string> _nameMap = new Dictionary<int, string>();
+        Dictionary<int, bool> _readyMap = new Dictionary<int, bool>();
         DurakGame _game = new DurakGame();
 
         public int AddPlayer(string name)
@@ -27,7 +28,8 @@ namespace CardGames.Core.Presenters
             var players = _game.Players.OrderBy(p => p.Id);
             int id = players.Any() ? players.Last().Id + 1 : 0;
 
-            _nameMap.Add(id, name);
+            _nameMap[id] = name;
+            _readyMap[id] = false;
             _game.AddPlayer(id);
             return id;
         }
@@ -47,9 +49,17 @@ namespace CardGames.Core.Presenters
             _game.SkipTurn(playerId);
         }
 
-        public PlayerState GetState(int playerId)
+        public void SetPlayerReady(int playerId, bool isReady)
         {
-            return new PlayerState
+            _readyMap[playerId] = isReady;
+
+            if (isReady && _readyMap.Values.All(v => v) && _game.Players.Count >= 2)
+                _game.Start();
+        }
+
+        public GameStateHolder GetState(int playerId)
+        {
+            return new GameStateHolder
             {
                 Trump = _game.Trump.ToString(),
                 GameState = _game.State.ToString(),
@@ -64,7 +74,7 @@ namespace CardGames.Core.Presenters
             };
         }
 
-        public class PlayerState
+        public class GameStateHolder
         {
             public string Trump { get; set; }
             public string GameState { get; set; }
@@ -109,6 +119,12 @@ namespace CardGames.Core.Presenters
                         throw new Exception($"No semantic name for value {value}");
                 }
             }
+        }
+
+        public class Player
+        {
+            public string Name { get; set; }
+            public bool IsReady { get; set; }
         }
     }
 }

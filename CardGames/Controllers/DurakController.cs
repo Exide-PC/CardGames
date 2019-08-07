@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using CardGames.Services;
-using static CardGames.Core.Durak.Card;
 using CardGames.Core.Durak;
 using CardGames.Models;
 using CardGames.Core.Presenters;
@@ -25,7 +21,7 @@ namespace CardGames.Controllers
         }
 
         [HttpGet("state")]
-        public DurakPresenter.PlayerState GetState()
+        public DurakPresenter.GameStateHolder GetState()
         {
             (DurakPresenter game, int playerId) = GetPlayerData();
 
@@ -65,6 +61,13 @@ namespace CardGames.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost("status")]
+        public void SetPlayerStatus([FromQuery]bool isReady)
+        {
+            (DurakPresenter game, int playerId) = GetPlayerData();
+            game.SetPlayerReady(playerId, isReady);
         }
 
         (DurakPresenter game, int playerId) GetPlayerData()
