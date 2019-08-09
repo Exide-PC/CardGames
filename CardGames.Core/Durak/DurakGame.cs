@@ -286,7 +286,7 @@ namespace CardGames.Core.Durak
             };
 
             // remove duplicated attacker if there is actually only one
-            if (_players.Count > 2)
+            if (_players.Count == 2)
                 attackers.RemoveAt(0);
             return attackers;
         }

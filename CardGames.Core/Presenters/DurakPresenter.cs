@@ -63,7 +63,7 @@ namespace CardGames.Core.Presenters
                 IsAttack = _game.IsAttack,
                 IsInitialAttack = _game.IsInitialAttack,
                 DefenderId = _game.Players[_game.DefenderIndex].Id,
-                InitialAttacker = _game.Players[_game.InitialAttacker].Id,
+                AttackerId = _game.Players[_game.InitialAttacker].Id,
                 CanMakeTurn = _game.CanMakeTurn(playerId),
                 CurrentPlayerId = _game.CurrentPlayer.Id,
                 Players = _players,
@@ -80,7 +80,7 @@ namespace CardGames.Core.Presenters
             public bool IsAttack { get; set; }
             public bool IsInitialAttack { get; set; }
             public int DefenderId { get; set; }
-            public int InitialAttacker { get; set; }
+            public int AttackerId { get; set; }
             public bool CanMakeTurn { get; set; }
             public int CurrentPlayerId { get; set; }
             public IEnumerable<object> Players { get; set; }
