@@ -61,8 +61,10 @@ namespace CardGames.Core.Presenters
                 GameState = _game.State.ToString(),
                 DeckCount = _game.Deck.Count,
                 IsAttack = _game.IsAttack,
+                IsInitialAttack = _game.IsInitialAttack,
                 DefenderId = _game.Players[_game.DefenderIndex].Id,
-                AttackerId = _game.Players[_game.AttackerIndex].Id,
+                InitialAttacker = _game.Players[_game.InitialAttacker].Id,
+                CanMakeTurn = _game.CanMakeTurn(playerId),
                 CurrentPlayerId = _game.CurrentPlayer.Id,
                 Players = _players,
                 Hand = _game.Players.First(p => p.Id == playerId).Hand.Select(c => new NamedCard(c)),
@@ -76,8 +78,10 @@ namespace CardGames.Core.Presenters
             public string GameState { get; set; }
             public int DeckCount { get; set; }
             public bool IsAttack { get; set; }
+            public bool IsInitialAttack { get; set; }
             public int DefenderId { get; set; }
-            public int AttackerId { get; set; }
+            public int InitialAttacker { get; set; }
+            public bool CanMakeTurn { get; set; }
             public int CurrentPlayerId { get; set; }
             public IEnumerable<object> Players { get; set; }
             public IEnumerable<NamedCard> Hand { get; set; }

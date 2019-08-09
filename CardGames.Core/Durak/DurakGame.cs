@@ -18,14 +18,15 @@ namespace CardGames.Core.Durak
         public IEnumerable<AttackEntry> Attacks => _attacks.AsReadOnly();
         
         public bool IsAttack => _attacks.Count == 0 || _attacks.Last().IsBeaten;
+        public bool IsInitialAttack => !_attacks.Any();
         public int DefenderIndex
         { 
             get => _defenderIndex; 
             set => _defenderIndex = NormalizeIndex(value);
         }
         // returns left or right player's index depending on whose order to attack it is now
-        public int AttackerIndex => this.NormalizeIndex(this.DefenderIndex + (_attackerOrderFlag ? 1 : -1));
-        public int CurrentPlayerIndex => this.IsAttack ? this.AttackerIndex : this.DefenderIndex;
+        public int InitialAttacker => this.NormalizeIndex(this.DefenderIndex - 1);
+        public int CurrentPlayerIndex => this.IsAttack ? this.InitialAttacker : this.DefenderIndex;
         public Player CurrentPlayer => _players[this.CurrentPlayerIndex];
         #endregion
 
@@ -35,10 +36,9 @@ namespace CardGames.Core.Durak
         private GameState _state = GameState.Preparation;
         private CardSuit _trump;
         private int _defenderIndex = -1;
-        private bool _attackerOrderFlag = false;
         private List<AttackEntry> _attacks = new List<AttackEntry>();
         private bool _isAnyAttackBeatenOff = false;
-        private int _attackersSkippedTurns = 0;
+        private HashSet<int> _attackersSkippedTurns = new HashSet<int>();
         #endregion
 
         public DurakGame(IEnumerable<Player> players, IEnumerable<Card> deck, CardSuit? trump = null)
@@ -110,9 +110,6 @@ namespace CardGames.Core.Durak
             // defender's index is 1 greater, but ensure the bounds are correct
             this.DefenderIndex = attackerIndex + 1;
 
-             // first attacker is player on the right
-            _attackerOrderFlag = false;
-
             // the game starts
             _state = GameState.Started;
         }
@@ -146,20 +143,25 @@ namespace CardGames.Core.Durak
 
                 _attacks.Last().Beat(usedCard);
                  // both attackers got a chance to use a card again
-                _attackersSkippedTurns = 0;
+                _attackersSkippedTurns.Clear();
 
                 // first attack is 5 cards maximum, in this case 
                 // current attackers forcibly skip their turns
                 if (_isAnyAttackBeatenOff == false && _attacks.Count == 5)
                     this.NextStage(hasDefended: true);
 
-                // coping current defender index to check if the new stage has begun
-                int previousDefender = this.DefenderIndex;
+                // update attackers skipping turns count
+                Player[] attackers = new Player[]
+                {
+                    GetByIndex(this.DefenderIndex - 1),
+                    GetByIndex(this.DefenderIndex + 1)
+                };
 
-                // looking for first attacker who has cards to attack with
-                while (!CanAttack(this.CurrentPlayer) && previousDefender == this.DefenderIndex)
-                    // if there is no one, the NextStage(true) will be called eventually
-                    this.SkipTurn(this.CurrentPlayerIndex);
+                // if all attackers will skip turn, 
+                // the NextStage() will be called eventually
+                foreach (Player attacker in attackers)
+                    if (!CanAttack(attacker))
+                        this.SkipTurn(attacker.Id); 
             }
 
             player.Hand.RemoveAll(inHand => inHand == usedCard);
@@ -171,23 +173,29 @@ namespace CardGames.Core.Durak
 
         public void SkipTurn(int playerId)
         {
-            if (playerId != this.CurrentPlayer.Id)
-                throw new GameException($"It's id {this.CurrentPlayerIndex}'s turn, not {playerId}'s");
-
             if (this.IsAttack) // skip for attacker means nothing more to attack with
             {
-                _attackersSkippedTurns++;
-                _attackerOrderFlag = !_attackerOrderFlag;
+                if (_attacks.Count == 0)
+                    throw new GameException($"Id {playerId} can't skip the turn because he is initial attacker");
+
+                if (playerId != GetByIndex(this.DefenderIndex - 1).Id &&
+                    playerId != GetByIndex(this.DefenderIndex + 1).Id)
+                    throw new GameException($"Id {playerId} can't skip turn, because he is not an attacker");
+
+                _attackersSkippedTurns.Add(playerId);
                 
                 // 3+ players => 2 attackers. 2 players => 1 attacker
                 int attackerCount = _players.Count >= 3 ? 2 : 1;
 
-                // if both attackers skipped turns then we move to the next stage
-                if (_attackersSkippedTurns == attackerCount)
+                // if all attackers skipped turns then we move to the next stage
+                if (_attackersSkippedTurns.Count == attackerCount)
                     this.NextStage(hasDefended: true);
             }
             else // for defender it means that he cant beat the attacker and takes all cards
             {
+                if (playerId != this.CurrentPlayer.Id)
+                    throw new GameException($"It's id {this.CurrentPlayerIndex}'s turn, not {playerId}'s");
+
                 Player defender = this.CurrentPlayer;
 
                 _attacks.ForEach(attack => {
@@ -223,8 +231,7 @@ namespace CardGames.Core.Durak
         private void NextStage(bool hasDefended)
         {
             _isAnyAttackBeatenOff = hasDefended ? true : _isAnyAttackBeatenOff;
-            _attackerOrderFlag = false;
-            _attackersSkippedTurns = 0;
+            _attackersSkippedTurns.Clear();
             _attacks.Clear();
 
             this.GiveAway();
@@ -263,6 +270,28 @@ namespace CardGames.Core.Durak
                 player.Hand.Any(inHand => 
                     cardsOnTable.Any(onTable => 
                         inHand.Value == onTable.Value));
+        }
+
+        public bool CanMakeTurn(int playerId)
+        {
+            if (this.IsAttack)
+            {
+                int[] attackerIds = new int[]
+                {
+                    this.GetByIndex(this.DefenderIndex - 1).Id,
+                    this.GetByIndex(this.DefenderIndex + 1).Id,
+                };
+
+                if (attackerIds.All(id => playerId != id))
+                    return false;
+
+                Player player = _players.First(p => p.Id == playerId);
+                return this.CanAttack(player);
+            }
+            else
+            {
+                return this.DefenderIndex == playerId;
+            }
         }
       
         public class AttackEntry
