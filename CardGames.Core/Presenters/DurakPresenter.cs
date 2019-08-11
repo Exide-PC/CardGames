@@ -64,10 +64,10 @@ namespace CardGames.Core.Presenters
                 IsInitialAttack = _game.IsInitialAttack,
                 DefenderId = _game.Players[_game.DefenderIndex].Id,
                 AttackerId = _game.Players[_game.InitialAttacker].Id,
-                CanMakeTurn = _game.CanMakeTurn(playerId),
                 CurrentPlayerId = _game.CurrentPlayer.Id,
                 Players = _players,
                 Hand = _game.Players.First(p => p.Id == playerId).Hand.Select(c => new NamedCard(c)),
+                CardsForTurn = _game.GetCardsForTurn(playerId).Select(c => new NamedCard(c)),
                 Attacks = _game.Attacks.Select(a => (new NamedCard(a.Attacker), new NamedCard(a.Defender)))
             };
         }
@@ -81,10 +81,10 @@ namespace CardGames.Core.Presenters
             public bool IsInitialAttack { get; set; }
             public int DefenderId { get; set; }
             public int AttackerId { get; set; }
-            public bool CanMakeTurn { get; set; }
             public int CurrentPlayerId { get; set; }
             public IEnumerable<object> Players { get; set; }
             public IEnumerable<NamedCard> Hand { get; set; }
+            public IEnumerable<NamedCard> CardsForTurn { get; set; }
             public IEnumerable<(NamedCard attacker, NamedCard defender)> Attacks { get; set; }
         }
 

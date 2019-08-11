@@ -131,7 +131,8 @@ namespace CardGames.Core.Durak
                     a.Defender.Value != usedCard.Value))
                     throw new GameException($"Card {usedCard} can't be used for attack");
 
-                _attacks.Add(new AttackEntry(usedCard));                
+                _attacks.Add(new AttackEntry(usedCard));     
+                player.Hand.RemoveAll(inHand => inHand == usedCard);
             }
             else
             {
@@ -142,6 +143,7 @@ namespace CardGames.Core.Durak
                     throw new GameException($"{usedCard} doesn't beat {attack}");
 
                 _attacks.Last().Beat(usedCard);
+                player.Hand.RemoveAll(inHand => inHand == usedCard);
                  // both attackers got a chance to use a card again
                 _attackersSkippedTurns.Clear();
 
@@ -153,11 +155,9 @@ namespace CardGames.Core.Durak
                 // if all attackers will skip turn, 
                 // the NextStage() will be called eventually
                 foreach (Player attacker in this.GetAttackers())
-                    if (!CanAttack(attacker))
+                    if (!this.GetCardsForTurn(attacker.Id).Any())
                         this.SkipTurn(attacker.Id); 
             }
-
-            player.Hand.RemoveAll(inHand => inHand == usedCard);
 
             // end game check
             if (_deck.Count == 0 && _players.Where(p => p.Hand.Count > 0).Count() == 1)
@@ -197,19 +197,40 @@ namespace CardGames.Core.Durak
             }
         }
 
-        public bool CanMakeTurn(int playerId)
+        public IEnumerable<Card> GetCardsForTurn(int playerId)
         {
+            Player player = _players.Get(playerId);
+
             if (this.IsAttack)
             {
-                if (!this.GetAttackers().ContainsId(playerId))
-                    return false;
+                if (this.IsInitialAttack)
+                {
+                    if (this.InitialAttacker != playerId)
+                        return Enumerable.Empty<Card>();
 
-                Player player = _players.Get(playerId);
-                return this.CanAttack(player);
+                    return player.Hand;
+                }
+                else
+                {
+                    if (!this.GetAttackers().ContainsId(playerId))
+                        return Enumerable.Empty<Card>();
+
+                    var cardsOnTable = this.GetCardsOnTable();
+
+                    return player.Hand
+                        .Where(inHand => cardsOnTable.Any(onTable => 
+                            inHand.Value == onTable.Value));
+                }
             }
             else
             {
-                return this.DefenderIndex == playerId;
+                if (this.DefenderIndex != playerId)
+                    return Enumerable.Empty<Card>();
+
+                Card attackerCard = _attacks.Last().Attacker;
+
+                return player.Hand
+                    .Where(inHand => inHand.DoesBeat(attackerCard, _trump));
             }
         }
 
@@ -260,7 +281,7 @@ namespace CardGames.Core.Durak
             return _players[NormalizeIndex(index)];
         }
 
-        private bool CanAttack(Player player)
+        private IReadOnlyList<Card> GetCardsOnTable()
         {
             List<Card> cardsOnTable = new List<Card>();
 
@@ -270,11 +291,8 @@ namespace CardGames.Core.Durak
                     cardsOnTable.Add(attack.Defender);
                 cardsOnTable.Add(attack.Attacker);
             }
-            
-            return 
-                player.Hand.Any(inHand => 
-                    cardsOnTable.Any(onTable => 
-                        inHand.Value == onTable.Value));
+
+            return cardsOnTable;
         }
 
         private IReadOnlyList<Player> GetAttackers()
