@@ -1,9 +1,23 @@
+@keyframes apearing {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .room-container {
     flex: 0 0 33%;
     padding: 0 15px;
     margin-bottom: 20px;
     z-index: 5;
     user-select: none;
+    cursor: pointer;
+    animation: apearing .8s;
 }
 
 .room {
@@ -15,7 +29,7 @@
     color: white;
     position: relative;
     overflow: hidden;
-    height: 150px;
+    height: 180px;
 }
 
 .room:after {
@@ -79,6 +93,10 @@
 
 .room__players {
     margin-bottom: 10px;
+}
+
+.room__full {
+    color: red;
 }
 
 .room__join {

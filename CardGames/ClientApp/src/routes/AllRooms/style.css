@@ -10,3 +10,9 @@
     background-size: cover;
     height: 100vh;
 }
+
+.no-games {
+    font-size: 40px;
+    color: white;
+    text-align: center;
+}
