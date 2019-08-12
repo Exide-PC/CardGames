@@ -51,7 +51,7 @@
 .room:before {
     content: "";
     position: absolute;
-    left: 24%;
+    left: 20%;
     width: 0;
     bottom: 14px;
     display: block;
@@ -84,7 +84,7 @@
 .room:hover:before {
     transition: width .3s;
     transition-delay: .5s;
-    width: 55%;
+    width: 61%;
 }
 
 .room__number {
@@ -93,6 +93,7 @@
 
 .room__players {
     margin-bottom: 10px;
+    font-weight: bold;
 }
 
 .room__full {
