@@ -51,5 +51,10 @@ namespace CardGames.Services
             this.Games.Add(game);
             return game.Uid;
         }
+
+        public void DeleteLobby(string uid)
+        {
+            this.Games.RemoveAll(g => g.Uid == uid);
+        }
     }
 }
