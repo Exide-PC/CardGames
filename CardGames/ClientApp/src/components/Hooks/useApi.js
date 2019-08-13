@@ -15,7 +15,7 @@ const Api = (url, timeout = 1000) => {
     setTimeout(() => setLoading(false), timeout + 300);
 
     return () => clearInterval(timerId);
-  }, []);
+  }, [url, timeout]);
 
   return [data, loading];
 };

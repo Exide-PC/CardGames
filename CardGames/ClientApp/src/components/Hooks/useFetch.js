@@ -15,7 +15,7 @@ const useFetch = (url, method, data, headers, callback) => {
         setLoading(false);
       })
       .catch(console.log);
-  }, []);
+  }, [url, method, data]);
 
   return [result, loading];
 };
