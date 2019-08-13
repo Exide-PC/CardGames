@@ -2,11 +2,10 @@ import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import './style.css';
-import Card from '../Card'
+import Card from '../Card';
 // import Modal from "../Modal";
 
 const Player = ({ id, name, cards, index }) => {
-
   const [activeModal, setActiveModal] = useState(false);
   const [activeCard, setActiveCard] = useState('');
 
@@ -17,7 +16,7 @@ const Player = ({ id, name, cards, index }) => {
       setActiveModal(false);
       window.modalId = null;
     }, 2000);
-  }
+  };
 
   return (
     <Fragment>
@@ -39,13 +38,13 @@ const Player = ({ id, name, cards, index }) => {
       {/* {activeModal && <Modal />} */}
     </Fragment>
   );
-}
+};
 
 Player.propTypes = {
   id: PropTypes.number,
   name: PropTypes.string,
   cards: PropTypes.arrayOf(PropTypes.object),
-  index: PropTypes.number,
-}
+  index: PropTypes.number
+};
 
 export default Player;

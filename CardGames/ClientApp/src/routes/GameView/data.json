@@ -1,55 +1,49 @@
 {
-    "players": [
+  "players": [
+    {
+      "id": 1,
+      "name": "Player1",
+      "cards": []
+    },
+    {
+      "id": 2,
+      "name": "Player2",
+      "cards": []
+    },
+    {
+      "id": 3,
+      "name": "Player3",
+      "cards": [
         {
-            "id": 1,
-            "name": "Player1",
-            "cards": [
-
-            ]
+          "value": 3,
+          "type": "clubs"
         },
         {
-            "id": 2,
-            "name": "Player2",
-            "cards": [
-
-            ]
+          "value": 2,
+          "type": "spades"
         },
         {
-            "id": 3,
-            "name": "Player3",
-            "cards": [
-                {
-                    "value": 3,
-                    "type": "clubs"
-                },
-                {
-                    "value": 2,
-                    "type": "spades"
-                },
-                {
-                    "value": 4,
-                    "type": "diamonds"
-                },
-                {
-                    "value": 8,
-                    "type": "spades"
-                },
-                {
-                    "value": 6,
-                    "type": "clubs"
-                },
-                {
-                    "value": 3,
-                    "type": "hearts"
-                }
-            ]
+          "value": 4,
+          "type": "diamonds"
         },
         {
-            "id": 4,
-            "name": "Player4",
-            "cards": [
-
-            ]
+          "value": 8,
+          "type": "spades"
+        },
+        {
+          "value": 6,
+          "type": "clubs"
+        },
+        {
+          "value": 3,
+          "type": "hearts"
         }
-    ]
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Player4",
+      "cards": []
+    }
+  ]
 }

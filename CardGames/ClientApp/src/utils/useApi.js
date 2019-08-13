@@ -5,20 +5,18 @@ const Api = (url, timeout = 1000) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     const timerId = setInterval(() => {
       fetch(url)
         .then(resp => resp.json())
-        .then(setData)
+        .then(setData);
     }, timeout);
-    
+
     setTimeout(() => setLoading(false), timeout + 200);
 
-    return () => clearInterval(timerId)
+    return () => clearInterval(timerId);
+  }, []);
 
-  }, [])
-
-  return [data, loading]
-}
+  return [data, loading];
+};
 
 export default Api;

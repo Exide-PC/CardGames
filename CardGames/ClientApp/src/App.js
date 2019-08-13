@@ -7,11 +7,10 @@ const App = () => {
   return (
     <Fragment>
       {routes.map(({ Component, ...props }, index) => (
-          <Route key={index} {...props} />
+        <Route key={index} {...props} />
       ))}
     </Fragment>
-  )
-}
+  );
+};
 
 export default App;
-

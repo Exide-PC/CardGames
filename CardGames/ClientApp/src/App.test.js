@@ -8,5 +8,7 @@ it('renders without crashing', () => {
   ReactDOM.render(
     <MemoryRouter>
       <App />
-    </MemoryRouter>, div);
+    </MemoryRouter>,
+    div
+  );
 });

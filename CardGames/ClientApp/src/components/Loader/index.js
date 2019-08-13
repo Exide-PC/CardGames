@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import './style.css'
+import './style.css';
 
 const loader = () => {
   return (
@@ -8,7 +8,7 @@ const loader = () => {
       <div className="shadow-field" />
       <div className="loader" />
     </Fragment>
-  )
-}
+  );
+};
 
 export default loader;

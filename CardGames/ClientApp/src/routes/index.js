@@ -13,5 +13,5 @@ export default [
     path: '/game',
     component: GameView,
     exact: true
-  },
-]
+  }
+];
