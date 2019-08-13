@@ -10,6 +10,7 @@ namespace CardGames.Core.Presenters
     {         
         #region PresenterBase implementation
         public override GameType Type => GameType.Durak;
+        public override string Name { get; set; }
         public override IEnumerable<string> PlayerNames => _players.Select(p => p.Name);
         public override bool HasSlots => _game.Players.Count < 5;
         #endregion

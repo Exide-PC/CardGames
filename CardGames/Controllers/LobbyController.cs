@@ -40,12 +40,14 @@ namespace CardGames.Controllers
 
         // lobby/create?type=durak
         [HttpPost("create")]
-        public IActionResult Create([FromQuery][Required]string name)
+        public IActionResult Create(
+            [FromQuery][Required]string nick,
+            [FromQuery][Required]string room)
         {
-            string uid = _lobbyService.CreateLobby();
+            string uid = _lobbyService.CreateLobby(room);
 
             var game = _lobbyService.GetByUid<DurakPresenter>(uid);
-            int playerId = game.AddPlayer(name);
+            int playerId = game.AddPlayer(nick);
             
             var authData = _authService.CreatePlayerToken(uid, playerId, true);
             return Ok(new

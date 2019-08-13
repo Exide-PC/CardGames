@@ -15,15 +15,14 @@ namespace CardGames.Services
         {
             #if DEBUG
             // TODO: Remove, just for debug
-            DurakPresenter game = new DurakPresenter();
+            string uid = this.CreateLobby("Test game");
 
+            var game = this.GetByUid<DurakPresenter>(uid);
             game.Uid = "test";
             game.AddPlayer("Rib0");
             game.AddPlayer("Exide");
             game.AddPlayer("Leviy hren");
             game.Start();
-
-            this.Games.Add(game);
             #endif
         }
 
@@ -45,9 +44,9 @@ namespace CardGames.Services
             });
         }
 
-        public string CreateLobby()
+        public string CreateLobby(string name)
         {
-            DurakPresenter game = new DurakPresenter();
+            DurakPresenter game = new DurakPresenter() { Name = name };
             this.Games.Add(game);
             return game.Uid;
         }
