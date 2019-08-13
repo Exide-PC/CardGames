@@ -8,7 +8,8 @@ const Api = (url, timeout = 1000) => {
     const timerId = setInterval(() => {
       fetch(url)
         .then(resp => resp.json())
-        .then(setData);
+        .then(setData)
+        .catch(() => {});
     }, timeout);
 
     setTimeout(() => setLoading(false), timeout + 300);

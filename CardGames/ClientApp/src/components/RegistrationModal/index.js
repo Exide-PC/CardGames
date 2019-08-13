@@ -7,7 +7,6 @@ import Input from '../Input';
 import './style.css';
 
 const RegistrationModal = ({ onClose, isCreate, history }) => {
-  // переделать с children
   const [name, setName] = useState('');
   const [roomName, setRoomName] = useState('');
   const [error, setError] = useState(false);
