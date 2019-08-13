@@ -1,0 +1,27 @@
+.modal__input-container {
+    position: relative;
+}
+
+.modal__input {
+    border: none;
+    border-bottom: 1px solid black;
+    outline: none;
+    margin-top: 20px;
+    width: 50%;
+    padding-bottom: 5px;
+}
+
+.modal__input:focus + .modal__line {
+    width: 50%;
+}
+
+.modal__line {
+    position: absolute;
+    background: black;
+    width: 0;
+    height: 3px;
+    left: 50%;
+    bottom: -1px;
+    transform: translateX(-50%);
+    transition: width .3s;
+}
