@@ -4,13 +4,16 @@ import Button from '../../components/Button'; // todo different game types
 import RegistrationModal from '../../components/RegistrationModal';
 import useApi from '../../components/Hooks/useApi';
 import Loader from '../../components/Loader';
+import Api from './api';
 
 import './style.css';
 
 const AllRooms = () => {
   const [activeModal, setActiveModal] = useState(false);
   const [activeCreateModal, setActiveCreateModal] = useState(false);
-  const [rooms, loading] = useApi('api/Lobby/list', 2000);
+  const [rooms, loading] = useApi('api/lobby/list', 2000);
+
+  // Api.createRoom({ nick: 'name', room: 'room' })
 
   const openCreate = () => {
     setActiveModal(true);
