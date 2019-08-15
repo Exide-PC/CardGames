@@ -1,8 +1,9 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { withRouter } from 'react-router-dom';
 
 import Input from '../Input';
+import useOnClickOutSide from '../Hooks/useOnClickOutSide';
 
 import './style.css';
 
@@ -10,6 +11,7 @@ const RegistrationModal = ({ onClose, isCreate, history }) => {
   const [name, setName] = useState('');
   const [roomName, setRoomName] = useState('');
   const [error, setError] = useState(false);
+  const modal = useRef(null);
 
   const showError = () => {
     if (window.timeId) return;
@@ -28,6 +30,8 @@ const RegistrationModal = ({ onClose, isCreate, history }) => {
     } else showError();
   };
 
+  useOnClickOutSide(modal, onClose);
+
   useEffect(() => () => {
     clearTimeout(window.timeId);
     window.timeId = null;
@@ -37,7 +41,7 @@ const RegistrationModal = ({ onClose, isCreate, history }) => {
 
   return createPortal(
     <Fragment>
-      <div className="modal">
+      <div className="modal" ref={modal}>
         <h2 className={`${error && 'modal__error'}`}>{header}</h2>
         <Input
           value={name}
@@ -54,7 +58,7 @@ const RegistrationModal = ({ onClose, isCreate, history }) => {
           />
         )}
       </div>
-      <div className="shadow-field" onMouseDown={onClose} />
+      <div className="shadow-field" />
     </Fragment>,
     document.body
   );
