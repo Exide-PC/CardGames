@@ -39,7 +39,7 @@ namespace CardGames.Controllers
         }
 
         // lobby/create?type=durak
-        [HttpPost("create")]
+        [HttpGet("create")]
         public IActionResult Create(
             [FromQuery][Required]string nick,
             [FromQuery][Required]string room)
