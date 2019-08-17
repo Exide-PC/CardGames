@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Xml.Serialization;
 using static CardGames.Core.Durak.Card;
 
 namespace CardGames.Core.Durak
@@ -227,10 +228,15 @@ namespace CardGames.Core.Durak
                 if (this.DefenderIndex != playerId)
                     return Enumerable.Empty<Card>();
 
-                Card attackerCard = _attacks.Last().Attacker;
+                IReadOnlyList<Card> attackers = _attacks
+                    .Where(a => !a.IsBeaten)
+                    .Select(a => a.Attacker)
+                    .ToArray();
 
-                return player.Hand
-                    .Where(inHand => inHand.DoesBeat(attackerCard, _trump));
+                return player
+                    .Hand.Where(inHand => 
+                        attackers.Any(a => 
+                            inHand.DoesBeat(a, _trump)));
             }
         }
 
