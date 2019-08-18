@@ -1,6 +1,5 @@
 {
     "dotnet-test-explorer.testProjectPath": "/CardGames.Core.Tests/CardGames.Core.Tests.csproj",
     "dotnet-test-explorer.autoExpandTree": true,
-    "appService.defaultWebAppToDeploy": "/subscriptions/8bbe09ac-a302-4664-bddf-5aa500701e4c/resourceGroups/CardGamesDevGroup/providers/Microsoft.Web/sites/CardGamesDev",
-    "appService.deploySubpath": ""
+    "appService.defaultWebAppToDeploy": "/subscriptions/8bbe09ac-a302-4664-bddf-5aa500701e4c/resourceGroups/CardGamesDevGroup/providers/Microsoft.Web/sites/CardGamesDev"
 }

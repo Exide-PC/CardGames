@@ -14,14 +14,14 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "publish",
+            "label": "publish [Debug]",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "publish",
                 "${workspaceFolder}/CardGames/CardGames.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "--configuration", "Debug",
+                "--output", "${workspaceFolder}/publish/Debug"
             ],
             "problemMatcher": "$msCompile"
         },
