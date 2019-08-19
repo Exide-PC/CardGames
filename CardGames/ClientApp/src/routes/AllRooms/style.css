@@ -6,10 +6,8 @@
 }
 
 .bg-rooms {
-    background: url('../../images/background2.jpg') center center no-repeat;
-    background-size: cover;
-    height: 100vh;
-    overflow: hidden;
+    background: url('../../images/background2.jpg') top center;
+    background-size: contain;
 }
 
 .no-games {

@@ -11,7 +11,6 @@ import './style.css';
 const AllRooms = () => {
   const [activeModal, setActiveModal] = useState(false);
   const [activeCreateModal, setActiveCreateModal] = useState(false);
-  const container = useRef(null);
   // const [rooms, loading] = useApi('api/lobby/list', 2000);
 
   const loading = false;
@@ -125,14 +124,6 @@ const AllRooms = () => {
 
   // Api.createRoom({ nick: 'name', room: 'room' })
 
-  useEffect(() => {
-    const listener = ({ deltaY }) => container.current.scrollBy(0, deltaY);
-
-    window.addEventListener('wheel', listener);
-
-    return () => window.removeEventListener('wheel', listener);
-  }, [container]);
-
   const openCreate = () => {
     setActiveModal(true);
     setActiveCreateModal(true);
@@ -144,7 +135,7 @@ const AllRooms = () => {
   };
 
   return (
-    <div ref={container} className="bg-rooms">
+    <div className="bg-rooms">
       <div className="container">
         <Button text="Создать игру" onClick={openCreate} />
         {!loading && !rooms && <h1 className="no-games">Нет доступных игр</h1>}
