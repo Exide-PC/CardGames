@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Room from '../../components/Room';
 import Button from '../../components/Button'; // todo different game types
 import RegistrationModal from '../../components/RegistrationModal';
@@ -11,9 +11,127 @@ import './style.css';
 const AllRooms = () => {
   const [activeModal, setActiveModal] = useState(false);
   const [activeCreateModal, setActiveCreateModal] = useState(false);
-  const [rooms, loading] = useApi('api/lobby/list', 2000);
+  const container = useRef(null);
+  // const [rooms, loading] = useApi('api/lobby/list', 2000);
+
+  const loading = false;
+
+  const rooms = [
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    },
+    {
+      name: 'name',
+      players: []
+    }
+  ];
 
   // Api.createRoom({ nick: 'name', room: 'room' })
+
+  useEffect(() => {
+    const listener = ({ deltaY }) => container.current.scrollBy(0, deltaY);
+
+    window.addEventListener('wheel', listener);
+
+    return () => window.removeEventListener('wheel', listener);
+  }, [container]);
 
   const openCreate = () => {
     setActiveModal(true);
@@ -26,7 +144,7 @@ const AllRooms = () => {
   };
 
   return (
-    <div className="bg-rooms">
+    <div ref={container} className="bg-rooms">
       <div className="container">
         <Button text="Создать игру" onClick={openCreate} />
         {!loading && !rooms && <h1 className="no-games">Нет доступных игр</h1>}

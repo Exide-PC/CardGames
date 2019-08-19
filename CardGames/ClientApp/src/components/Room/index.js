@@ -13,8 +13,12 @@ const Room = ({ players, number, hasSlots, onClick }) => {
       <div className="room" onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
         <div className="room__background" />
         <h2 className="room__number">Комната № {number}</h2>
-        {!show && <p className="room__players">Игрков: {players.length}</p>}
-        {show && <p className="room__players">{players.join(' | ')}</p>}
+        {(!show || !players.length) && (
+          <p className="room__players">Игрков: {players.length}</p>
+        )}
+        {show && !!players.length && (
+          <p className="room__players">{players.join(' | ')}</p>
+        )}
         {hasSlots ? <p>Есть места</p> : <p className="room__full">Мест нет</p>}
       </div>
     </div>
