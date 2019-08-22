@@ -134,6 +134,16 @@ namespace CardGames.Core.Durak
 
                 _attacks.Add(new AttackEntry(usedCard));     
                 player.Hand.RemoveAll(inHand => inHand == usedCard);
+
+                // defender skips turn if he can't handle all unbeaten cards
+                Player defender = this.GetByIndex(_defenderIndex);
+
+                IReadOnlyList<Card> attackers = _attacks
+                    .Where(a => !a.IsBeaten).Select(a => a.Attacker).ToList();
+
+                // If any attacker can't be beaten by defender's hand - defender takes all cards
+                if (attackers.Any(a => defender.Hand.All(h => !h.DoesBeat(a, _trump))))
+                    this.SkipTurn(defender.Id);
             }
             else
             {
