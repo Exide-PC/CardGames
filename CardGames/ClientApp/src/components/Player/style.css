@@ -1,6 +1,6 @@
 .player {
     position: fixed;
-    color: white;
+    color: var(--color-white);
     font-size: 30px;
     text-align: center;
 }

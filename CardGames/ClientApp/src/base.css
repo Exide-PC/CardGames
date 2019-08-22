@@ -1,0 +1,9 @@
+@custom-media --viewport-medium (width >= 480px);
+@custom-media --viewport-medium (width >= 767px);
+@custom-media --viewport-medium (width >= 1200px);
+
+:root {
+    --color-white: #fff;
+    --color-black: #000;
+    --color-light-gray: #e0e0e0;
+}

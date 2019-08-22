@@ -26,7 +26,7 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
-    color: white;
+    color: var(--color-white);
     position: relative;
     overflow: hidden;
     height: 180px;
@@ -56,7 +56,7 @@
     bottom: 14px;
     display: block;
     height: 2px;
-    background: white;
+    background: var(--color-white);
     transition-delay: 0;
 }
 
