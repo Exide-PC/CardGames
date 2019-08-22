@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CardGames.Core.Durak;
-using static CardGames.Core.Durak.Card;
+using static CardGames.Core.Durak.DurakGame;
 
 namespace CardGames.Core.Presenters
 {
@@ -66,6 +66,7 @@ namespace CardGames.Core.Presenters
                 DefenderId = _game.Players[_game.DefenderIndex].Id,
                 AttackerId = _game.Players[_game.InitialAttacker].Id,
                 CurrentPlayerId = _game.CurrentPlayer.Id,
+                Role = _game.GetPlayerRole(playerId),
                 Players = _players,
                 Hand = _game.Players.First(p => p.Id == playerId).Hand.Select(c => new NamedCard(c)),
                 CardsForTurn = _game.GetCardsForTurn(playerId).Select(c => new NamedCard(c)),
@@ -83,6 +84,7 @@ namespace CardGames.Core.Presenters
             public int DefenderId { get; set; }
             public int AttackerId { get; set; }
             public int CurrentPlayerId { get; set; }
+            public PlayerRole Role { get; set; }
             public IEnumerable<object> Players { get; set; }
             public IEnumerable<NamedCard> Hand { get; set; }
             public IEnumerable<NamedCard> CardsForTurn { get; set; }

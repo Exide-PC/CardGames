@@ -10,6 +10,7 @@ namespace CardGames.Core.Durak
     public class DurakGame
     {       
         public enum GameState { Preparation, Started, Finished }
+        public enum PlayerRole { None, Defender, Attacker }
 
         #region Public props
         public ReadOnlyCollection<Player> Players => _players.AsReadOnly();
@@ -117,14 +118,15 @@ namespace CardGames.Core.Durak
 
         public void Turn(int playerId, Card usedCard)
         {
-            Player player = this.CurrentPlayer;
+            Player player = _players.Get(playerId);
+            PlayerRole role = this.GetPlayerRole(playerId);
 
-            if (playerId != player.Id)
-                throw new GameException($"It's id {this.CurrentPlayerIndex}'s turn, not {playerId}'s");
+            if (role == PlayerRole.None)
+                throw new GameException($"Id {playerId} can't make turn in current stage");
             if (usedCard != null && player.Hand.All(c => c != usedCard))
                 throw new GameException($"User with {playerId} doesn't have card {usedCard}");
 
-            if (this.IsAttack)
+            if (role == PlayerRole.Attacker)
             {
                 // check that card can be used for attack
                 if (_attacks.Count != 0 && _attacks.All(a => 
@@ -177,7 +179,10 @@ namespace CardGames.Core.Durak
 
         public void SkipTurn(int playerId)
         {
-            if (this.IsAttack) // skip for attacker means nothing more to attack with
+            Player player = _players.Get(playerId);
+            PlayerRole role = this.GetPlayerRole(playerId);
+
+            if (role == PlayerRole.Attacker) // skip for attacker means nothing more to attack with
             {
                 if (_attacks.Count == 0)
                     throw new GameException($"Id {playerId} can't skip the turn because he is initial attacker");
@@ -208,46 +213,54 @@ namespace CardGames.Core.Durak
             }
         }
 
-        public IEnumerable<Card> GetCardsForTurn(int playerId)
+        public IReadOnlyList<Card> GetCardsForTurn(int playerId)
         {
             Player player = _players.Get(playerId);
+            PlayerRole role = this.GetPlayerRole(playerId);
+            IEnumerable<Card> cards = new List<Card>();
 
-            if (this.IsAttack)
+            if (role == PlayerRole.Attacker)
             {
                 if (this.IsInitialAttack)
                 {
-                    if (this.InitialAttacker != playerId)
-                        return Enumerable.Empty<Card>();
-
-                    return player.Hand;
+                    if (this.InitialAttacker == playerId)
+                        cards = player.Hand;
                 }
-                else
+                else if (this.GetAttackers().ContainsId(playerId))
                 {
-                    if (!this.GetAttackers().ContainsId(playerId))
-                        return Enumerable.Empty<Card>();
-
                     var cardsOnTable = this.GetCardsOnTable();
 
-                    return player.Hand
+                    cards = player.Hand
                         .Where(inHand => cardsOnTable.Any(onTable => 
                             inHand.Value == onTable.Value));
                 }
             }
-            else
+            else if (role == PlayerRole.Defender)
             {
-                if (this.DefenderIndex != playerId)
-                    return Enumerable.Empty<Card>();
-
-                IReadOnlyList<Card> attackers = _attacks
+                if (this.DefenderIndex == playerId)
+                {
+                    IEnumerable<Card> attackers = _attacks
                     .Where(a => !a.IsBeaten)
-                    .Select(a => a.Attacker)
-                    .ToArray();
+                    .Select(a => a.Attacker);
 
-                return player
-                    .Hand.Where(inHand => 
-                        attackers.Any(a => 
-                            inHand.DoesBeat(a, _trump)));
+                    cards = player
+                        .Hand.Where(inHand => 
+                            attackers.Any(a => 
+                                inHand.DoesBeat(a, _trump)));
+                }
             }
+
+            return cards.ToArray();
+        }
+
+        public PlayerRole GetPlayerRole(int playerId)
+        {
+            if (this.GetAttackers().ContainsId(playerId))
+                return PlayerRole.Attacker;
+            else if (playerId == this.DefenderIndex)
+                return PlayerRole.Defender;
+            else
+                return PlayerRole.None;
         }
 
         private void GiveAway()
@@ -323,6 +336,6 @@ namespace CardGames.Core.Durak
             if (_players.Count == 2)
                 attackers.RemoveAt(0);
             return attackers;
-        }
+        }        
     }
 }
