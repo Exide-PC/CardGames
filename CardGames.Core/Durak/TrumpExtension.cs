@@ -7,7 +7,7 @@ namespace CardGames.Core.Durak
 {
     public static  class TrumpExtension
     {
-        public static Card GetLowestTrump(this IEnumerable<Card> hand, CardSuit trumpSuit)
+        public static Card GetLowestTrump(this IReadOnlyList<Card> hand, CardSuit trumpSuit)
         {
             return hand
                 .Where(c => c.Suit == trumpSuit)
@@ -25,6 +25,11 @@ namespace CardGames.Core.Durak
                 return defender.Value > attacker.Value;
             else
                 return false;
+        }
+
+        public static IReadOnlyList<Card> Beating(this IReadOnlyList<Card> hand, Card card, CardSuit trumpSuit)
+        {
+            return hand.Where(inHand => inHand.DoesBeat(card, trumpSuit)).ToArray();
         }
     }
 }

@@ -144,7 +144,7 @@ namespace CardGames.Core.Durak
                     .Where(a => !a.IsBeaten).Select(a => a.Attacker).ToList();
 
                 // If any attacker can't be beaten by defender's hand - defender takes all cards
-                if (attackers.Any(a => defender.Hand.All(h => !h.DoesBeat(a, _trump))))
+                if (attackers.Any(a => defender.Hand.Beating(a, _trump).Count == 0))
                     this.SkipTurn(defender.Id);
             }
             else
