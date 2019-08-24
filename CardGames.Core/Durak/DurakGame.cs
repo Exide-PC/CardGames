@@ -19,7 +19,7 @@ namespace CardGames.Core.Durak
         public CardSuit Trump => _trump;
         public IEnumerable<AttackEntry> Attacks => _attacks.AsReadOnly();
         
-        public bool IsAttack => _attacks.Count == 0 || _attacks.Last().IsBeaten;
+        public bool IsAttack => _attacks.Unbeaten().Count > 0;
         public bool IsInitialAttack => !_attacks.Any();
         public int DefenderIndex
         { 
@@ -116,7 +116,7 @@ namespace CardGames.Core.Durak
             _state = GameState.Started;
         }
 
-        public void Turn(int playerId, Card usedCard)
+        public void Turn(int playerId, Card usedCard, Card target = null)
         {
             Player player = _players.Get(playerId);
             PlayerRole role = this.GetPlayerRole(playerId);
@@ -140,8 +140,7 @@ namespace CardGames.Core.Durak
                 // defender skips turn if he can't handle all unbeaten cards
                 Player defender = this.GetByIndex(_defenderIndex);
 
-                IReadOnlyList<Card> attackers = _attacks
-                    .Where(a => !a.IsBeaten).Select(a => a.Attacker).ToList();
+                IReadOnlyList<Card> attackers = _attacks.Unbeaten();
 
                 // If any attacker can't be beaten by defender's hand - defender takes all cards
                 if (attackers.Any(a => defender.Hand.Beating(a, _trump).Count == 0))
@@ -239,9 +238,7 @@ namespace CardGames.Core.Durak
             {
                 if (this.DefenderIndex == playerId)
                 {
-                    IEnumerable<Card> attackers = _attacks
-                    .Where(a => !a.IsBeaten)
-                    .Select(a => a.Attacker);
+                    IReadOnlyList<Card> attackers = _attacks.Unbeaten();
 
                     cards = player
                         .Hand.Where(inHand => 
