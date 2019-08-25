@@ -19,7 +19,7 @@ namespace CardGames.Core.Durak
         public CardSuit Trump => _trump;
         public IEnumerable<AttackEntry> Attacks => _attacks.AsReadOnly();
         
-        public bool IsAttack => _attacks.Unbeaten().Count > 0;
+        public bool IsAttack => _attacks.Unbeaten().Any();
         public bool IsInitialAttack => !_attacks.Any();
         public int DefenderIndex
         { 
@@ -148,20 +148,27 @@ namespace CardGames.Core.Durak
             }
             else
             {
+                IReadOnlyList<Card> unbeaten = _attacks.Unbeaten();
+
+                if (unbeaten.Count == 0)
+                    throw new GameException($"There are no unbeaten cards on the table");
+                if (target != null && !unbeaten.Contains(target))
+                    throw new GameException($"There is no unbeaten {target} on the table");
+
+                target = target ?? _attacks.Last().Attacker;
+
                 // check that used card can beat attacking one
-                Card attack = _attacks.Last().Attacker;
+                if (!usedCard.DoesBeat(target, _trump))
+                    throw new GameException($"{usedCard} doesn't beat {target}");
 
-                if (!usedCard.DoesBeat(attack, _trump))
-                    throw new GameException($"{usedCard} doesn't beat {attack}");
-
-                _attacks.Last().Beat(usedCard);
+                _attacks.First(a => a.Attacker == target).Beat(usedCard);
                 player.Hand.RemoveAll(inHand => inHand == usedCard);
                  // both attackers got a chance to use a card again
                 _attackersSkippedTurns.Clear();
 
                 // first attack is 5 cards maximum, in this case 
                 // current attackers forcibly skip their turns
-                if (_isAnyAttackBeatenOff == false && _attacks.Count == 5)
+                if (!_isAnyAttackBeatenOff && _attacks.Count == 5)
                     this.NextStage(hasDefended: true);
 
                 // if all attackers will skip turn, 

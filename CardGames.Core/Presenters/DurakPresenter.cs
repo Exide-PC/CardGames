@@ -36,9 +36,9 @@ namespace CardGames.Core.Presenters
             _game.Start();
         }
 
-        public void Turn(int playerId, Card card)
+        public void Turn(int playerId, Card card, Card target)
         {
-            _game.Turn(playerId, card);
+            _game.Turn(playerId, card, target);
         }
 
         public void SkipTurn(int playerId)

@@ -31,13 +31,13 @@ namespace CardGames.Controllers
 
         // durak/turn
         [HttpPost("turn")]
-        public IActionResult MakeTurn([FromBody] Card card)
+        public IActionResult MakeTurn([FromBody] Card card, [FromBody] Card target = null)
         {
             (DurakPresenter game, int playerId) = GetPlayerData();
 
             try
             {
-                game.Turn(playerId, card);
+                game.Turn(playerId, card, target);
                 return Ok();
             }
             catch (GameException ex)
