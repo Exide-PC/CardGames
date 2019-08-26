@@ -9,6 +9,9 @@
     background: url('../../images/background2.jpg') top center no-repeat;
     background-size: cover;
     background-attachment: fixed;
+}
+
+.bg-rooms--full-height {
     height: 100vh;
 }
 
