@@ -6,7 +6,7 @@ const Button = ({ text, ...props }) => {
   const className = `button ${props.className || ''}`;
 
   return (
-    <button {...props} className={className}>
+    <button type="button" {...props} className={className}>
       {text}
     </button>
   );

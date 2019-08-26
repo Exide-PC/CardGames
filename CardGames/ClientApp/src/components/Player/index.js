@@ -10,11 +10,10 @@ const Player = ({ id, name, cards, index }) => {
   const [activeCard, setActiveCard] = useState('');
 
   const toggleModal = () => {
-    if (window.modalId) return;
+    if (activeModal) return;
     setActiveModal(true);
-    window.modalId = setTimeout(() => {
+    setTimeout(() => {
       setActiveModal(false);
-      window.modalId = null;
     }, 2000);
   };
 

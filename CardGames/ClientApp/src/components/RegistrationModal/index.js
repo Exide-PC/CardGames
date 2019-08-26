@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { withRouter } from 'react-router-dom';
 
 import Input from '../Input';
+import Button from '../Button';
 import useOnClickOutSide from '../Hooks/useOnClickOutSide';
 
 import './style.css';
@@ -14,17 +15,16 @@ const RegistrationModal = ({ onClose, isCreate, history }) => {
   const modal = useRef(null);
 
   const showError = () => {
-    if (window.timeId) return;
+    if (error) return;
     setError(true);
-    window.timeId = setTimeout(() => {
+    setTimeout(() => {
       setError(false);
-      window.timeId = null;
     }, 1000);
   };
 
   const onSumbit = ({ keyCode }) => {
+    if (keyCode && keyCode !== 13) return;
     const values = isCreate ? [name, roomName] : [name];
-    if (keyCode !== 13) return;
     if (values.every(value => value.trim())) {
       history.push('/Game');
     } else showError();
@@ -38,6 +38,7 @@ const RegistrationModal = ({ onClose, isCreate, history }) => {
   });
 
   const header = isCreate ? 'Введите имя и название комнаты' : 'Введите имя';
+  const buttonText = isCreate ? 'Создать' : 'Войти';
 
   return createPortal(
     <Fragment>
@@ -57,6 +58,11 @@ const RegistrationModal = ({ onClose, isCreate, history }) => {
             onSumbit={onSumbit}
           />
         )}
+        <Button
+          text={buttonText}
+          className="modal__submit"
+          onClick={onSumbit}
+        />
       </div>
       <div className="shadow-field" />
     </Fragment>,

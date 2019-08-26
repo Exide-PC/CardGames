@@ -64,7 +64,7 @@ namespace CardGames.Controllers
         }
 
         [HttpPost("status")]
-        public void SetPlayerStatus([FromQuery]bool isReady)
+        public void SetPlayerStatus([FromBody]bool isReady)
         {
             (DurakPresenter game, int playerId) = GetPlayerData();
             game.SetPlayerReady(playerId, isReady);
