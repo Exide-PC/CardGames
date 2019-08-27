@@ -25,6 +25,21 @@
             }
         },
         {
+            "name": "Launch just API",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/CardGames/bin/Debug/netcoreapp2.2/CardGames.dll",
+            "args": [],
+            "cwd": "${workspaceRoot}/CardGames",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+            },
+            "justMyCode": false,
+            "suppressJITOptimizations": true,
+        },
+        {
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach",
