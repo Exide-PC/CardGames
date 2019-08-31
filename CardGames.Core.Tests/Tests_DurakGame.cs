@@ -49,7 +49,6 @@ namespace Tests
             
             Assert.Throws<GameException>(() => game.Turn(0, new Card(CardSuit.Clubs, 0)));
             Assert.DoesNotThrow(() => game.Turn(0, new Card(CardSuit.Diamonds, 2)));
-            Assert.That(game.CurrentPlayerIndex == 1);
             Assert.That(game.Players[0].Hand.Count == 1);
 
             Assert.Throws<GameException>(() => game.Turn(0, new Card(CardSuit.Diamonds, 0)));

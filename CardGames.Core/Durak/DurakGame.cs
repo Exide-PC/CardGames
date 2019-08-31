@@ -28,8 +28,6 @@ namespace CardGames.Core.Durak
         }
         // returns left or right player's index depending on whose order to attack it is now
         public int InitialAttacker => this.NormalizeIndex(this.DefenderIndex - 1);
-        public int CurrentPlayerIndex => this.IsAttack ? this.InitialAttacker : this.DefenderIndex;
-        public Player CurrentPlayer => _players[this.CurrentPlayerIndex];
         #endregion
 
         #region Private props 
@@ -188,6 +186,9 @@ namespace CardGames.Core.Durak
             Player player = _players.Get(playerId);
             PlayerRole role = this.GetPlayerRole(playerId);
 
+            if (role == PlayerRole.None)
+                throw new GameException($"Id {playerId} can't skip turn, because he has no role for this stage");
+
             if (role == PlayerRole.Attacker) // skip for attacker means nothing more to attack with
             {
                 if (_attacks.Count == 0)
@@ -204,10 +205,7 @@ namespace CardGames.Core.Durak
             }
             else // for defender it means that he cant beat the attacker and takes all cards
             {
-                if (playerId != this.CurrentPlayer.Id)
-                    throw new GameException($"It's id {this.CurrentPlayerIndex}'s turn, not {playerId}'s");
-
-                Player defender = this.CurrentPlayer;
+                Player defender = this.GetByIndex(_defenderIndex);
 
                 _attacks.ForEach(attack => {
                     if (attack.Defender != null)

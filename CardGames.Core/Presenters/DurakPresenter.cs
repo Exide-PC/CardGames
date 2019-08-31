@@ -65,7 +65,6 @@ namespace CardGames.Core.Presenters
                 IsInitialAttack = _game.IsInitialAttack,
                 DefenderId = _game.Players[_game.DefenderIndex].Id,
                 AttackerId = _game.Players[_game.InitialAttacker].Id,
-                CurrentPlayerId = _game.CurrentPlayer.Id,
                 Role = _game.GetPlayerRole(playerId),
                 Players = _players,
                 Hand = _game.Players.First(p => p.Id == playerId).Hand.Select(c => new NamedCard(c)),
