@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CardGames.Core.Durak;
 using static CardGames.Core.Durak.DurakGame;
@@ -37,7 +38,7 @@ namespace CardGamesCLI
                 PrintHands();
                 PrintAttacks();
 
-                Console.WriteLine($"\nTrump: {game.Trump}");
+                Console.WriteLine($"\nTrump: ---{game.Trump}---");
                 Console.WriteLine($"Deck: {game.Deck.Count}");
                 Console.WriteLine($"Defender: Player{game.DefenderIndex}\n");
 
@@ -53,7 +54,7 @@ namespace CardGamesCLI
                 PlayerRole role;
                 do 
                 {
-                    playerId = ReadInt("Select player");
+                    playerId = ReadInt("Select player", game.Players.Count);
                     role = game.GetPlayerRole(playerId);
                 }
                 while (role == PlayerRole.None);
@@ -63,21 +64,26 @@ namespace CardGamesCLI
                 Console.WriteLine($"Your hand:");
                 PrintHand(playerId);
 
-                int cardIndex;
-                do
-                    cardIndex = ReadInt("Card index");
-                while (cardIndex < 0 || cardIndex >= player.Hand.Count);
+                int cardIndex = ReadInt("Card index", player.Hand.Count);
 
                 Card card = player.Hand[cardIndex];
+                IReadOnlyList<Card> unbeaten = game.Attacks.Unbeaten();
 
-                if (role == PlayerRole.Attacker || game.Attacks.Unbeaten().Count < 2)
+                if (role == PlayerRole.Attacker || unbeaten.Count < 2)
                 {
                     Try(() => game.Turn(playerId, card));
                 }
                 else
                 {
-                    // TODO: Ask target
-                    // Try(() => game.Turn(playerId, card, target));
+                    Console.WriteLine("Unbeaten cards:");
+                    
+                    for (int i = 0; i < unbeaten.Count; i++)
+                        Console.WriteLine($"{i}. {unbeaten[i]}");
+
+                    int targetIndex = ReadInt($"Select target", unbeaten.Count);
+                    Card target = unbeaten[targetIndex];
+
+                    Try(() => game.Turn(playerId, card, target));
                 }
 
                 Console.WriteLine();
@@ -158,13 +164,17 @@ namespace CardGamesCLI
             }
         }
     
-        static int ReadInt(string msg)
+        static int ReadInt(string msg, int count)
         {
             Console.Write($"{msg}: ");
 
             int num;
-            while (!int.TryParse(Console.ReadLine(), out num))
-                Console.WriteLine("Incorrect input, try again");
+            do 
+            {
+                while (!int.TryParse(Console.ReadLine(), out num))
+                    Console.WriteLine("Incorrect input, try again");
+            }
+            while (num < 0 || num >= count);
                 
             return num;
         }
