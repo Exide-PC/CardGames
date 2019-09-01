@@ -7,11 +7,25 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/CardGames/CardGames.csproj",
+                "${workspaceFolder}/CardGames.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "cleanup [Debug]",
+            "type": "shell",
+            "command": "rm",
+            "args": [
+                "-Force",
+                "-Recurse",
+                "${workspaceFolder}/publish/Debug"
+            ]
         },
         {
             "label": "publish [Debug]",
@@ -24,6 +38,14 @@
                 "--output", "${workspaceFolder}/publish/Debug"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "cleanup & publish [Debug]",
+            "dependsOn": [
+                "cleanup [Debug]",
+                "publish [Debug]"
+            ],
+            "problemMatcher": []
         },
         {
             "label": "watch",
