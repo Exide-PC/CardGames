@@ -5,6 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Console emulation",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/CardGamesCLI/bin/Debug/netcoreapp2.2/CardGamesCLI.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/CardGamesCLI",
+            "stopAtEntry": false,
+            "console": "externalTerminal"
+        },
+        {
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
@@ -31,7 +42,7 @@
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/CardGames/bin/Debug/netcoreapp2.2/CardGames.dll",
             "args": [],
-            "cwd": "${workspaceRoot}/CardGames",
+            "cwd": "${workspaceFolder}/CardGames",
             "stopAtEntry": false,
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",

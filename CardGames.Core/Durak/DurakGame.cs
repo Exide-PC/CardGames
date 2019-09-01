@@ -13,11 +13,11 @@ namespace CardGames.Core.Durak
         public enum PlayerRole { None, Defender, Attacker }
 
         #region Public props
-        public ReadOnlyCollection<Player> Players => _players.AsReadOnly();
+        public IReadOnlyList<Player> Players => _players.AsReadOnly();
         public Deck Deck => _deck;
         public GameState State => _state;
         public CardSuit Trump => _trump;
-        public IEnumerable<AttackEntry> Attacks => _attacks.AsReadOnly();
+        public IReadOnlyList<AttackEntry> Attacks => _attacks.AsReadOnly();
         
         public bool IsAttack => _attacks.Unbeaten().Any();
         public bool IsInitialAttack => !_attacks.Any();
